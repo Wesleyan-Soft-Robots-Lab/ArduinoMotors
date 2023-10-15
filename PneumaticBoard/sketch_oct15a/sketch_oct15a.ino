@@ -1,4 +1,4 @@
-//Hallo this is my test code. 
+
 int solenoidPin = 4; //output pin on the arduino board
 
 

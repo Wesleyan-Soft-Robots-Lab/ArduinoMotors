@@ -1,17 +1,23 @@
+//This is the most recent version of the pneumatic board control code that we have. this control the
+//rate at which the solenoids will be opening and closing per second. This controls airflow
+
+//POTpin controls the dial
 int POTpin = A15;
+//solenoid pins control the output onto solenoids
 int solenoidPin = 12;
 int solenoidPin1 = 11;
 int solenoidPin2 = 10;
 int solenoidPin3 = 9;
+//values for which we can map open and closed rates(map) and value for which we see rate printed on screen(POT)
 int POTval, mapval; 
 
+//Structure for determining time open and time closed
 struct SolVals {
   int open;
   int closed;
 };
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
   pinMode(solenoidPin, OUTPUT);
   pinMode(solenoidPin1, OUTPUT); //sets pin as output

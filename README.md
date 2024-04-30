@@ -1,8 +1,4 @@
-# ArduinoMotors
-This is the repo for the pneumatic and tendon motors 
+# ArduinoPneumaticBoard
+This is the repo for the pneumatic Board 
 
-
-
-Hey guys, so this is the branch for your tendon motor side of the project. Make sure to add any code/sources that you've used into this branch. Thanks!
-
-Make sure you clone this repo into your personal devices in order to make changes. 
+This repo consists of designs, instructions, and code to build and use the soft robotics lab pneumatic board. 

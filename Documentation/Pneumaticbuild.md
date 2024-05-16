@@ -96,6 +96,9 @@ In the image, a DC motor is displayed, but substituting it with an air valve wil
 - The Arduino processes this analog reading to set the output signal on digital pin 13. If the signal is high, the air valve opens and closes rapidly; if the signal is low, the opposite happens (refer to the code to understand the detailed logic).
 
 
+Last updated: 5/16/2024 by Kevin Angulo Lezama
+
+
 
 
 

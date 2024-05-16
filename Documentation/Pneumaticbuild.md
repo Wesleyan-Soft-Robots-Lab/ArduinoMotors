@@ -1,6 +1,6 @@
 <h1>This file directs how to put together the circuit in order to add another solenoid to our actuator.</h1>
 
-<h3> Components: </h3> 
+<h2> Components: </h2> 
 <br/>
 
 <img width=50% alt="Screenshot 2024-05-16 at 12 03 09 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/80cd22cb-9920-454d-a2fb-8864d9162217">
@@ -55,6 +55,9 @@ Potentiometer
 <img width=50% alt="Screenshot 2024-05-16 at 12 31 13 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/3e81f375-d412-4c7c-9c18-d13b6c1b42bf">
 
 Everything!
+
+<h2> How to put together </h2>
+
 
 
 

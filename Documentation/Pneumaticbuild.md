@@ -9,6 +9,7 @@ MOSFET Transistor
 
 <br/>
 <img width=50% alt="Screenshot 2024-05-16 at 12 10 07 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/6e36a5b2-7278-477a-ba43-9ad5bfc8f4bb">
+
 Breadboard
 
 <br/>

@@ -65,7 +65,7 @@ In the image, a DC motor is shown, but replacing it with an air valve will work 
 
 
 1. **Arduino Power Supply**:
-   - The Arduino is powered through the USB port, which supplies 5V and ground (GND) to the board.
+  - The Arduino receives power through the USB port, providing 5V and ground (GND) to the board. However, since we will be using 6.5V air valves, an external power supply is necessary. This can be connected either through the Arduino's port or directly to the breadboard.
 
 2. **Potentiometer Connections**:
    - **Left Pin (VCC)**: The left pin of the potentiometer is connected to the 5V power rail on the breadboard. This supplies the potentiometer with a constant 5V.

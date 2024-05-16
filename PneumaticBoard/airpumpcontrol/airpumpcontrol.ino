@@ -1,3 +1,5 @@
+// Code by Christian Diaz Herrera and Kevin Angulo Lezama
+
 //This is the most recent version of the pneumatic board control code that we have. this control the
 //rate at which the solenoids will be opening and closing per second. This controls airflow
 

@@ -56,7 +56,48 @@ Potentiometer
 
 Everything!
 
-<h2> How to put together </h2>
+<h2> How to put together: </h2>
+
+
+<img width="1271" alt="Screenshot 2024-05-16 at 1 38 58 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/0a8036aa-f129-4655-9201-5b5f901baa98">
+
+In the image, a DC motor is shown, but replacing it with an air valve will work perfectly with the connections we've demonstrated.
+
+
+1. **Arduino Power Supply**:
+   - The Arduino is powered through the USB port, which supplies 5V and ground (GND) to the board.
+
+2. **Potentiometer Connections**:
+   - **Left Pin (VCC)**: The left pin of the potentiometer is connected to the 5V power rail on the breadboard. This supplies the potentiometer with a constant 5V.
+   - **Middle Pin (Output)**: The middle pin of the potentiometer (the wiper) is connected to the analog pin A0 on the Arduino via a purple wire. This pin outputs a variable voltage (depending on the position of the potentiometer knob) between 0V and 5V.
+   - **Right Pin (GND)**: The right pin of the potentiometer is connected to the ground (GND) rail on the breadboard. This completes the circuit for the potentiometer, allowing it to divide the 5V across its range.
+
+3. **Breadboard Power Rails**:
+   - **Red Rail**: The red power rail on the breadboard is connected to the 5V pin on the Arduino via a red wire. This rail provides 5V to components on the breadboard.
+   - **Blue Rail**: The blue ground rail on the breadboard is connected to a GND pin on the Arduino via a black wire. This rail provides a common ground to the components on the breadboard.
+
+4. **NMOS Transistor Connections**:
+   - **Gate (G)**: The gate pin of the NMOS transistor is connected to digital pin 9 on the Arduino via an orange wire. This pin controls the transistor's switching, turning it on and off.
+   - **Drain (D)**: The drain pin of the NMOS transistor is connected to one terminal of the motor. When the transistor is turned on, current flows from the drain to the source, allowing the motor to operate.
+   - **Source (S)**: The source pin of the NMOS transistor is connected to the ground rail on the breadboard. This provides a path for current to flow through the transistor when it is turned on.
+
+5. **Motor Connections**:
+   - **Negative Terminal**: The negative terminal of the motor is connected to the drain (D) of the NMOS transistor. This allows the motor to be controlled by the transistor.
+   - **Positive Terminal**: The positive terminal of the motor is connected to the 5V power rail on the breadboard. This supplies the motor with power.
+
+6. **Flyback Diode** (to protect against back EMF from the motor):
+   - The flyback diode is connected across the motor terminals. The cathode (marked end) is connected to the positive terminal of the motor, and the anode is connected to the drain (D) of the NMOS transistor. This diode protects the circuit from voltage spikes caused by the inductive load of the motor.
+
+7. **Current-Limiting Resistor**:
+   - A resistor is connected between the gate (G) of the NMOS transistor and digital pin 9 on the Arduino. This resistor limits the current flowing into the gate of the transistor, protecting the Arduino pin.
+
+### How It Works
+- When you rotate the potentiometer, it changes the voltage at its middle pin, which is read by the Arduino on analog pin A0.
+- The Arduino uses this analog reading to determine the output signal on digital pin 9. If the signal is high, it turns on the NMOS transistor by applying a voltage to the gate.
+- When the NMOS transistor is turned on, it allows current to flow from the motor’s positive terminal through the motor to the drain and then to the source, and finally to ground. This powers the motor.
+- The flyback diode prevents any back EMF (generated when the motor turns off) from damaging the circuit by providing a path for the current.
+
+By replacing the motor with an air valve and keeping the same connections, you can control the air valve in a similar manner, as the NMOS transistor will switch the valve on and off based on the Arduino's output.
 
 
 

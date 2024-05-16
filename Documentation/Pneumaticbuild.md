@@ -61,7 +61,7 @@ Everything!
 
 <img width="1271" alt="Screenshot 2024-05-16 at 1 38 58 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/0a8036aa-f129-4655-9201-5b5f901baa98">
 
-In the image, a DC motor is shown, but replacing it with an air valve will work perfectly with the connections we've demonstrated.
+In the image, a DC motor is displayed, but substituting it with an air valve will work seamlessly with the demonstrated connections. (Note: This setup shows the connection for a single air valve. If additional valves are needed, connect them similarly to different Analog and Digital pins, and update the code accordingly to account for these changes.)
 
 
 1. **Arduino Power Supply**:
@@ -85,19 +85,16 @@ In the image, a DC motor is shown, but replacing it with an air valve will work 
    - **Negative Terminal**: The negative terminal of the motor is connected to the drain (D) of the NMOS transistor. This allows the motor to be controlled by the transistor.
    - **Positive Terminal**: The positive terminal of the motor is connected to the 5V power rail on the breadboard. This supplies the motor with power.
 
-6. **Flyback Diode** (to protect against back EMF from the motor):
-   - The flyback diode is connected across the motor terminals. The cathode (marked end) is connected to the positive terminal of the motor, and the anode is connected to the drain (D) of the NMOS transistor. This diode protects the circuit from voltage spikes caused by the inductive load of the motor.
+6. **Diode**:
+   - The diode is connected across the motor terminals. The cathode (marked end) is connected to the positive terminal of the motor, and the anode is connected to the drain (D) of the NMOS transistor. This diode protects the circuit from voltage spikes caused by the inductive load of the motor.
 
 7. **Current-Limiting Resistor**:
-   - A resistor is connected between the gate (G) of the NMOS transistor and digital pin 9 on the Arduino. This resistor limits the current flowing into the gate of the transistor, protecting the Arduino pin.
+   - A resistor is connected between the gate (G) of the NMOS transistor and digital pin 13 on the Arduino. This resistor limits the current flowing into the gate of the transistor, protecting the Arduino pin.
 
 ### How It Works
 - When you rotate the potentiometer, it changes the voltage at its middle pin, which is read by the Arduino on analog pin A0.
-- The Arduino uses this analog reading to determine the output signal on digital pin 9. If the signal is high, it turns on the NMOS transistor by applying a voltage to the gate.
-- When the NMOS transistor is turned on, it allows current to flow from the motor’s positive terminal through the motor to the drain and then to the source, and finally to ground. This powers the motor.
-- The flyback diode prevents any back EMF (generated when the motor turns off) from damaging the circuit by providing a path for the current.
+- The Arduino processes this analog reading to set the output signal on digital pin 13. If the signal is high, the air valve opens and closes rapidly; if the signal is low, the opposite happens (refer to the code to understand the detailed logic).
 
-By replacing the motor with an air valve and keeping the same connections, you can control the air valve in a similar manner, as the NMOS transistor will switch the valve on and off based on the Arduino's output.
 
 
 

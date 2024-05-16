@@ -77,8 +77,8 @@ In the image, a DC motor is shown, but replacing it with an air valve will work 
    - **Blue Rail**: The blue ground rail on the breadboard is connected to a GND pin on the Arduino via a blue wire. This rail provides a common ground to the components on the breadboard.
 
 4. **NMOS Transistor Connections**:
-   - **Gate (G)**: The gate pin of the NMOS transistor is connected to digital pin 9 on the Arduino via an orange wire. This pin controls the transistor's switching, turning it on and off.
-   - **Drain (D)**: The drain pin of the NMOS transistor is connected to one terminal of the motor. When the transistor is turned on, current flows from the drain to the source, allowing the motor to operate.
+   - **Gate (G)**: The gate pin of the NMOS transistor is connected to digital pin 13 on the Arduino via an orange wire. This pin controls the transistor's switching, turning it on and off.
+   - **Drain (D)**: The drain pin of the NMOS transistor is connected to one terminal of the motor (Air Valve). When the transistor is turned on, current flows from the drain to the source, allowing the motor (Air Valve) to operate.
    - **Source (S)**: The source pin of the NMOS transistor is connected to the ground rail on the breadboard. This provides a path for current to flow through the transistor when it is turned on.
 
 5. **Motor Connections**:

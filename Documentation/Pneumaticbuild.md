@@ -1,4 +1,4 @@
-<h1>**Connecting and Controlling Air Valves with Arduino: A Step-by-Step Guide**.</h1>
+<h1>Connecting and Controlling Air Valves with Arduino: A Step-by-Step Guide.</h1>
 
 <h2> Components: </h2> 
 <br/>

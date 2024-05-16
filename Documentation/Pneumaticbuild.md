@@ -6,10 +6,11 @@
 <img width=50% alt="Screenshot 2024-05-16 at 12 03 09 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/80cd22cb-9920-454d-a2fb-8864d9162217">
 
 MOSFET Transistor
+
 <br/>
 <img width=50% alt="Screenshot 2024-05-16 at 12 10 07 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/6e36a5b2-7278-477a-ba43-9ad5bfc8f4bb">
-
 Breadboard
+
 <br/>
 <img width=50% alt="Screenshot 2024-05-16 at 12 22 10 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/d84adf26-b431-4be2-bfc4-ff59789dcc5a">
 

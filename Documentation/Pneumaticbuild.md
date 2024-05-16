@@ -68,13 +68,13 @@ In the image, a DC motor is shown, but replacing it with an air valve will work 
   - The Arduino receives power through the USB port, providing 5V and ground (GND) to the board. However, since we will be using 6.5V air valves, an external power supply is necessary. This can be connected either through the Arduino's port or directly to the breadboard.
 
 2. **Potentiometer Connections**:
-   - **Left Pin (VCC)**: The left pin of the potentiometer is connected to the 5V power rail on the breadboard. This supplies the potentiometer with a constant 5V.
+   - **Left Pin (VCC)**: The left pin of the potentiometer is connected to the 5V/Vin power rail on the breadboard. This supplies the potentiometer with a constant 5V.
    - **Middle Pin (Output)**: The middle pin of the potentiometer (the wiper) is connected to the analog pin A0 on the Arduino via a purple wire. This pin outputs a variable voltage (depending on the position of the potentiometer knob) between 0V and 5V.
    - **Right Pin (GND)**: The right pin of the potentiometer is connected to the ground (GND) rail on the breadboard. This completes the circuit for the potentiometer, allowing it to divide the 5V across its range.
 
 3. **Breadboard Power Rails**:
-   - **Red Rail**: The red power rail on the breadboard is connected to the 5V pin on the Arduino via a red wire. This rail provides 5V to components on the breadboard.
-   - **Blue Rail**: The blue ground rail on the breadboard is connected to a GND pin on the Arduino via a black wire. This rail provides a common ground to the components on the breadboard.
+   - **Red Rail**: The red power rail on the breadboard is connected to the 5V/Vin pin on the Arduino via a red wire. This rail provides 5V to components on the breadboard.
+   - **Blue Rail**: The blue ground rail on the breadboard is connected to a GND pin on the Arduino via a blue wire. This rail provides a common ground to the components on the breadboard.
 
 4. **NMOS Transistor Connections**:
    - **Gate (G)**: The gate pin of the NMOS transistor is connected to digital pin 9 on the Arduino via an orange wire. This pin controls the transistor's switching, turning it on and off.

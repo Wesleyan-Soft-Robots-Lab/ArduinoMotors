@@ -5,7 +5,7 @@
 
 <img width=50% alt="Screenshot 2024-05-16 at 12 03 09 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/80cd22cb-9920-454d-a2fb-8864d9162217">
 
-MOSFET Transistor
+MOSFET Transistor (IRF520PBF) rated for 9.2A
 
 <br/>
 <img width=50% alt="Screenshot 2024-05-16 at 12 10 07 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/6e36a5b2-7278-477a-ba43-9ad5bfc8f4bb">

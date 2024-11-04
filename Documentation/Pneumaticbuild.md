@@ -15,7 +15,7 @@ Breadboard
 <br/>
 <img width=50% alt="Screenshot 2024-05-16 at 12 22 10 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/d84adf26-b431-4be2-bfc4-ff59789dcc5a">
 
-Schottkey Diode (rated for at least 6V and 1 Amp)
+Schottkey Diode (rated for at least 6V and 1 Amp) 1N4001 Diode
 
 <br/>
 <img width=50% alt="Screenshot 2024-05-16 at 12 22 42 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/61be64dd-db8d-4bb7-ba41-0eb63814defd">
@@ -25,7 +25,7 @@ Schottkey Diode (rated for at least 6V and 1 Amp)
 <br/>
 <img width=50% alt="Screenshot 2024-05-16 at 12 26 24 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/171faa60-e1bf-4520-acf5-c826fc3e3036">
 
-6V Air valve 
+6V Air 3-Way Soleniod Valve 
 
 <br/>
 <img width=50% alt="Screenshot 2024-05-16 at 12 26 54 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/35518746-c7bf-476c-8467-23bf62103a79">

@@ -18,7 +18,7 @@
 //    - resistor_known: A voltage divider used to calculate an unknown resistance depends on a second known resistance. This is that resistance.
 //              - (wow this is a really awkward phrasing)
 
-const int interval = 2000;
+const int interval = 100;
 const int Vout_pin = A0;
 const int resistor_known = 1000;
 

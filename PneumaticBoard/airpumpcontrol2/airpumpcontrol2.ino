@@ -8,8 +8,8 @@ int solenoidPin2 = 3;
 int solenoidPin3 = 4;
 int solenoidPin4 = 5;
 
-int POTval1, mapval1;
-int POTval2, mapval2;
+int POTval1, mapval1, percent1;
+int POTval2, mapval2, percent2;
 
 
 
@@ -24,18 +24,26 @@ void setup() {
 void loop() {
   POTval1 = analogRead(POTpin1);
   mapval1 = map(POTval1, 0, 1023, 0,255);
+  percent1 = map(POTval1, 0, 1023, 0,100);
   POTval2 = analogRead(POTpin2);
   mapval2 = map(POTval2, 0, 1023, 0, 255);
+  percent2 = map(POTval2, 0,1023, 0,100);
 
-  Serial.print("POTval1: ");
+  Serial.print("Potval1: ");
   Serial.print(POTval1);
-  Serial.print("\tMapval1: ");
+  // Serial.println();
+  Serial.print("\tmapval1 ");
   Serial.print(mapval1);
-  Serial.println();
-  Serial.print("POTval2: " );
+  Serial.print("\tPercentage: ");
+  Serial.print(percent1);
+  // Serial.println();
+  Serial.print("\tPotval2: " );
   Serial.print(POTval2);
-  Serial.print("\tMapval2: ");
+  // Serial.println();
+  Serial.print("\tmapval2: ");
   Serial.print(mapval2);
+  Serial.print("\tPercentage: ");
+  Serial.print(percent2);
   Serial.println();
 
   analogWrite(solenoidPin1, mapval1);

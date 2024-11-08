@@ -1,12 +1,16 @@
 import serial
 import pandas as pd
 import time
+import os
 '''
-Daniel Bench
+Daniel Bench; Christian Diaz Herrera
 Friday 11/1
 
 Reading from voltage and resistance script and using pandas to create a csv file with the organized data
 '''
+
+dir_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data"
+files = os.listdir(dir_path)
 
 # Configure serial port (adjust 'COM3' to Arduino port)
 ser = serial.Serial('COM5', 9600)
@@ -51,7 +55,15 @@ except KeyboardInterrupt:
     print("Data collection stopped.")
 
 finally:
-    # Save to CSV when the script ends
-    data.to_csv('sensor_data.csv', index=False)
-    print("Data saved to 'sensor_data.csv'.")
+    if len(data) == 0:
+        print("No Data saved")
+        pass
+    else:
+        # Save to CSV when the script ends
+        i = len(files)
+        data.to_csv(f'Data_collection\Data\sensor_data_{i}.csv', index=False)
+        print(f"Data saved to 'sensor_data_{i}.csv'.")
     ser.close()
+
+
+"""Last Updated 11/8/2024"""

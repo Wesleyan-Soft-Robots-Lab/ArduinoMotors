@@ -14,7 +14,7 @@ time.sleep(2)
 
 # Creating empty .csv file
 data = pd.DataFrame(columns=['Time(s)',
-                             'R1 (O)',
+                             'R1(O)',
                               'R2(O)', 
                               'R3(O)', 
                               'R4(O)'])

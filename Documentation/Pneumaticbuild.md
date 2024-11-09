@@ -49,7 +49,7 @@ Expandable sleeving
 <br/>
 <img width=50% alt="Screenshot 2024-05-16 at 12 30 38 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/02c3c481-b3f7-4156-a6b4-75d7e91623c7">
 
-Potentiometer
+Potentiometer -- 0-10k Ohms
 
 <br/>
 <img width=50% alt="Screenshot 2024-05-16 at 12 31 13 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/3e81f375-d412-4c7c-9c18-d13b6c1b42bf">

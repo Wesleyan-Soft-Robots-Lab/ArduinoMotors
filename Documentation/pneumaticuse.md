@@ -26,13 +26,19 @@ First, we want to ensure that the airpump is plugged into a power source. Once t
 
 Take the air tube divider. Ensure that every output which will not be used is plugged so that no air is lost. Then ensure that the ones that will be used are plugged in correctly.
 
+6a. <img src="images\regulator.jpeg" alt="step 6" width="50%" height=auto> 
+
+At the input of the airtube divider a pressure regulator has been installed to allow for finer adjustments to the pressure release. To increases airflow, rotate the valve clockwise. Rotating the valve counter-clockwise decreases airflow.
+<br>***note: the valve has a push lock. The adjustment is locked when pushed in, and unlocked when out***
+
 7. <img src="images\tubing.jpeg" alt="step 7" width="50%" height=auto>
 
 Now ensure that the tubes are correctly connected to the pneumatic board as shown in the image above. 
 
 8. <img src="images\tubeplugin.jpeg" alt="step 8" width="50%" height=auto>
 
-Plug our tube piece to the knozzle of the airpump. Once this is plugged in, air will immediately begin to flow out of the pump. Once air flows out, you can use the dials to control the airflow into the balloons. Additionally, if you want more continouos airflow, you can turn on the airpump again to fill it while its releasing air. (I've noticed that air will usually come in at a faster rate than it is let out, so beware of this)
+Plug our tube piece to the knozzle of the airpump. Once this is plugged in, air will immediately begin to flow out of the pump. Once air flows out, you can use the regulator to control the airflow into the balloons. Additionally, if you want more continuous airflow, you can turn on the airpump again to fill it while its releasing air.
+<br> <b> Warning: The regulator acts as a bit of a buffer to ensuring steady outflow, though the airtank pressure will still build up at a faster rate than it is released.</b>
 
 9. <img src="images\unplug.jpeg" alt="step 9" width="50%" height=auto>
 
@@ -41,6 +47,6 @@ Once finished, to unplug the tubing, pull on the knozzle as shown in the image. 
 
 These are all the step to make the airpump/pneumatic board work. Update this document as we update our board.
 
-
-Last updated: 4/30/2024
-Christian Diaz Herrera
+Update Log:
+- 11/4/2024 -- Miles Modeste
+- 4/30/2024 -- Christian Diaz Herrera

@@ -3,7 +3,7 @@ import csv
 import numpy as np
 import pandas as pd
 import os
-file_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_8.csv"
+file_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_11.csv"
 
 data = pd.read_csv(file_path)
 
@@ -14,7 +14,7 @@ data = pd.read_csv(file_path)
 
 readings_list = data.values.tolist()
 
-video_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_8_trim.mp4"
+video_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_11_edited.mp4"
 cap = cv2.VideoCapture(video_path)
 
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))

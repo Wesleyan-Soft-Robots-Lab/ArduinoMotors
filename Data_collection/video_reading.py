@@ -3,7 +3,7 @@ import csv
 import numpy as np
 import pandas as pd
 import os
-file_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_11.csv"
+file_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_12.csv"
 
 data = pd.read_csv(file_path)
 
@@ -14,14 +14,14 @@ data = pd.read_csv(file_path)
 
 readings_list = data.values.tolist()
 
-video_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_11_edited.mp4"
+video_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_12.mp4"
 cap = cv2.VideoCapture(video_path)
 
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 fps = cap.get(cv2.CAP_PROP_FPS)
 
-output_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output_vid_w_resistance.avi"
+output_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output_vid_w_resistance_1.avi"
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 out = cv2.VideoWriter(output_path, fourcc=fourcc, fps=fps, frameSize=(width, height))
 

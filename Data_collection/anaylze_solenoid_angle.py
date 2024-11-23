@@ -73,8 +73,9 @@ def process_frame(frame):
         Please note that this should work assuming the second dot is always at a
         lower y position than the third (which I believe it should be) --Simon
         '''
-        (x1,y1), (x2,y2), (x3,y3) = dot_positions
-        angle1 = math.degrees(math.atan2(y1-y2,x1,x2))
+        [(x1,y1), (x2,y2), (x3,y3)] = dot_positions
+        # print(dot_positions)
+        angle1 = math.degrees(math.atan2(y1-y2,x1-x2))
         angle1 = round(angle1,2)
         angle2 = math.degrees(math.atan2(y2-y3,x2-x3))
         angle2 = round(angle2,2)
@@ -97,8 +98,8 @@ def analyze_video(video_path):
     Analyze video frames to detect red dots and calculate angles for each frame.
     """
     cap = cv2.VideoCapture(video_path)
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))//2
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))//2
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS)
     output_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output_angle.avi"
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -129,7 +130,7 @@ def analyze_video(video_path):
 
         # Create new line of data
         timed = time.time() - start_time
-        timed = round(timed,2)
+        timed = round(timed,1)
         new_row = pd.DataFrame({'Time(s)': [timed],
                                  'Angle1(deg)': [angle1],
                                  'Angle2(deg)': [angle2]})
@@ -158,7 +159,7 @@ def analyze_video(video_path):
     # cv2.destroyAllWindows()
 
 # Path for full image:
-path = r"C:\Users\softrobotslab\Pictures\Camera Roll\data_12_full.mp4"
+path = r"C:\Users\softrobotslab\Pictures\Camera Roll\data_13_full.mp4"
 # Path for partial image:
 # path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_12.mp4"
 angles1,angles2,output_path =  analyze_video(path)

@@ -3,7 +3,7 @@ import csv
 import numpy as np
 import pandas as pd
 import os
-file_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_12.csv"
+file_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_13.csv"
 
 data = pd.read_csv(file_path)
 

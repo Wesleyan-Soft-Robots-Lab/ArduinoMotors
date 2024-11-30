@@ -132,12 +132,12 @@ def analyze_video(video_path):
         # Create new line of data
         # timed = time.time() - start_time
         # timed = round(timed,1)
-        print(len(readings_list), reading_index)
+        # print(len(readings_list), reading_index)
         if reading_index < len(readings_list):
 
             curr_time, r1, r2, r3, r4 = readings_list[reading_index]
             frame_time = frame_count/fps
-            print(frame_time, curr_time)
+            # print(frame_time, curr_time)
             if frame_time >= curr_time:
                 new_row = pd.DataFrame({'Time(s)': [curr_time],
                                         'R1(O)': [r1],

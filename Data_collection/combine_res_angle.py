@@ -47,15 +47,8 @@ def process_frame(frame):
                 dot_positions.append((int(cx),int(cy)))
                 cv2.circle(frame,(int(cx),int(cy)),r,(0,255,255),2)
 
-            # # Get the center of the dot
-            # M = cv2.moments(contour)
-            # if M["m00"] != 0:
-            #     cx = int(M["m10"] / M["m00"])
-            #     cy = int(M["m01"] / M["m00"])
-            #     dot_positions.append((cx, cy))
-
     # Separate visual frame to show mask
-    # mask = cv2.imshow("mask", mask)
+    # mask_show = cv2.imshow("mask", mask)
     
     # Calculate the center of the object (assuming it's the geometric center of the dots)
     if len(dot_positions) == 2: # If 2 dots on machine
@@ -70,8 +63,8 @@ def process_frame(frame):
         return frame, (angle,None)
     elif len(dot_positions) == 3: # If 3 dots on machine
         '''
-        Please note that this should work assuming the second dot is always at a
-        lower y position than the third (which I believe it should be) --Simon
+        Please note that this should work assuming the third dot is always at a
+        lower y position than the second (which I believe it should be) --Simon
         '''
         [(x1,y1), (x2,y2), (x3,y3)] = dot_positions
         # print(dot_positions)
@@ -139,12 +132,12 @@ def analyze_video(video_path):
         # Create new line of data
         # timed = time.time() - start_time
         # timed = round(timed,1)
-        print(len(readings_list), reading_index)
+        # print(len(readings_list), reading_index)
         if reading_index < len(readings_list):
 
             curr_time, r1, r2, r3, r4 = readings_list[reading_index]
             frame_time = frame_count/fps
-            print(frame_time, curr_time)
+            # print(frame_time, curr_time)
             if frame_time >= curr_time:
                 new_row = pd.DataFrame({'Time(s)': [curr_time],
                                         'R1(O)': [r1],
@@ -155,7 +148,7 @@ def analyze_video(video_path):
                                         'Angle2(deg)': [angle2]})
                 data = pd.concat([data,new_row], ignore_index=True)
                 reading_index += 1
-
+        frame_count += 1
         # Display the processed frame
         cv2.imshow("Processed Frame", processed_frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):

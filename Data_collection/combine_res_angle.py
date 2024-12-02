@@ -84,7 +84,7 @@ def process_frame(frame):
     
     else:
 
-        return frame, None
+        return frame, (None, None)
 
 def analyze_video(video_path):
     """
@@ -106,7 +106,7 @@ def analyze_video(video_path):
                                    'R4(O)',
                                    'Angle1(deg)',
                                    'Angle2(deg)'])
-    time_file = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_13.csv"
+    time_file = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_18.csv"
     data_time = pd.read_csv(time_file)
     readings_list = data_time.values.tolist()
     # start_time = time.time()
@@ -172,7 +172,7 @@ def analyze_video(video_path):
     # cv2.destroyAllWindows()
 
 # Path for full image:
-path = r"C:\Users\softrobotslab\Pictures\Camera Roll\data_13_full.mp4"
+path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output.avi"
 # Path for partial image:
 # path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_12.mp4"
 angles1,angles2,output_path =  analyze_video(path)

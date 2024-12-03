@@ -134,9 +134,9 @@ def analyze_video(video_path):
         # timed = round(timed,1)
         # print(len(readings_list), reading_index)
         if reading_index < len(readings_list):
-
+            init_time,_,_,_,_ = readings_list[0]
             curr_time, r1, r2, r3, r4 = readings_list[reading_index]
-            frame_time = frame_count/fps
+            frame_time = frame_count/fps + init_time
             # print(frame_time, curr_time)
             if frame_time >= curr_time:
                 new_row = pd.DataFrame({'Time(s)': [curr_time],

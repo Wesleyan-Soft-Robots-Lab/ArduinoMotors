@@ -18,8 +18,8 @@ This script records data from a webcam and a sensor and saves it to a directory.
 
 DATA_DIRECTORY = "TestData"
 FRAMES_PER_SECOND = 20 # adjust to the frame rate
-DURATION = 5 # adjust to the duration
-WEBCAM_INDEX = 0 # adjust to the webcam index
+DURATION = 40 # adjust to the duration
+WEBCAM_INDEX = 1 # adjust to the webcam index
 VERBOSE = False # adjust to True to print more information
 
 ser = serial.Serial('COM5', 9600)
@@ -28,7 +28,6 @@ time.sleep(2)
 cap = cv2.VideoCapture(WEBCAM_INDEX) 
 if not cap.isOpened():
     print("Error: Could not open webcam.")
-    return
 
 sensor_data = pd.DataFrame(columns=['Time(s)', 'R1(O)', 'R2(O)', 'R3(O)', 'R4(O)'])
 
@@ -36,14 +35,13 @@ sensor_data = pd.DataFrame(columns=['Time(s)', 'R1(O)', 'R2(O)', 'R3(O)', 'R4(O)
 ### Functions
 ###############################
 
-def webcam_record():
+def webcam_record(count):
     """ Record a frame from the webcam.
     """
     ret, frame = cap.read()
         
     if not ret:
         print("Error: Failed to capture frame.")
-        break
 
     filename = os.path.join(DATA_DIRECTORY, f"image_{count}_{time.time()}.jpg")
     cv2.imwrite(filename, frame)
@@ -55,6 +53,7 @@ def webcam_record():
 def sensor_record():
     """ Record a line of data from the sensor
     """
+    global sensor_data
     line = ser.readline().decode('utf-8').strip()
     # Extract values from the line
     parts = line.split()
@@ -91,7 +90,7 @@ def record():
         if curr_time - last_time < interval:
             continue
         
-        webcam_record()
+        webcam_record(count)
         sensor_record()
         
         if cv2.waitKey(1) & 0xFF == ord('q'):

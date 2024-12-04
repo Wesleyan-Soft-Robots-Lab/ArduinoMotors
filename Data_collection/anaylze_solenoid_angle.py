@@ -159,7 +159,7 @@ def analyze_video(video_path):
     # cv2.destroyAllWindows()
 
 # Path for full image:
-path = r"C:\Users\softrobotslab\Pictures\Camera Roll\data_13_full.mp4"
+path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output.avi"
 # Path for partial image:
 # path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_12.mp4"
 angles1,angles2,output_path =  analyze_video(path)

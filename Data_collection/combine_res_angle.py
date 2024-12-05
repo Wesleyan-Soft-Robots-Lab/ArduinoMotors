@@ -100,12 +100,8 @@ def analyze_video(video_path):
     frame_count = 0
     reading_index = 0
     data = pd.DataFrame(columns = ['Time(s)',
-                                   'R1(O)', 
-                                   'R2(O)',
-                                   'R3(O)',
-                                   'R4(O)',
-                                   'Angle1(deg)',
-                                   'Angle2(deg)'])
+                                   'Res(O)',
+                                   'Angles(deg)'])
     time_file = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_18.csv"
     data_time = pd.read_csv(time_file)
     readings_list = data_time.values.tolist()
@@ -140,12 +136,8 @@ def analyze_video(video_path):
             # print(frame_time, curr_time)
             if frame_time >= curr_time:
                 new_row = pd.DataFrame({'Time(s)': [curr_time],
-                                        'R1(O)': [r1],
-                                        'R2(O)': [r2],
-                                        'R3(O)': [r3],
-                                        'R4(O)': [r4],
-                                        'Angle1(deg)': [angle1],
-                                        'Angle2(deg)': [angle2]})
+                                        'Res(O)': [(r1,r2,r3,r4)],
+                                        'Angles(deg)': [(angle1, angle2)]})
                 data = pd.concat([data,new_row], ignore_index=True)
                 reading_index += 1
         frame_count += 1

@@ -6,6 +6,7 @@ import time
 import os
 
 
+
 def process_frame(frame):
     """
     Analyze a frame to detect black dots and calculate their angles relative to the center.
@@ -48,16 +49,6 @@ def process_frame(frame):
                 dot_positions.append((int(cx),int(cy)))
                 cv2.circle(frame,(int(cx),int(cy)),r,(0,255,255),2)
 
-            # # Get the center of the dot
-            # M = cv2.moments(contour)
-            # if M["m00"] != 0:
-            #     cx = int(M["m10"] / M["m00"])
-            #     cy = int(M["m01"] / M["m00"])
-            #     dot_positions.append((cx, cy))
-
-    # Separate visual frame to show mask
-    # mask = cv2.imshow("mask", mask)
-    
     # Calculate the center of the object (assuming it's the geometric center of the dots)
     if len(dot_positions) == 2: # If 2 dots on machine
         (x1, y1), (x2, y2) = dot_positions
@@ -92,76 +83,25 @@ def process_frame(frame):
     
     else:
 
-        return frame, None
+        return frame, (None, None)
 
-def analyze_video(video_path):
-    """
-    Analyze video frames to detect red dots and calculate angles for each frame.
-    """
-    cap = cv2.VideoCapture(video_path)
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    output_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output_angle.avi"
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter(output_path, fourcc=fourcc, fps=fps, frameSize=(width, height))
 
-    data = pd.DataFrame(columns = ['Time(s)',
+def analyze_pictures(img_folder):
+    data = pd.DataFrame(columns=[
                                    'Angle1(deg)',
                                    'Angle2(deg)'])
-    start_time = time.time()
-
-    angles1 = []
-    angles2 = []
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
-        
-        # Process each frame
-        processed_frame, (angle1,angle2) = process_frame(frame)
-        # processed_frame = cv2.resize(processed_frame, (width, height))
-        out.write(processed_frame)
-        # Print the angles for this frame
-        # Append angles to respective lists
-        if angle1 is not None:
-            angles1.append(angle1)
-        if angle2 is not None:
-            angles2.append(angle2)
-
-        # Create new line of data
-        timed = time.time() - start_time
-        timed = round(timed,1)
-        new_row = pd.DataFrame({'Time(s)': [timed],
-                                 'Angle1(deg)': [angle1],
-                                 'Angle2(deg)': [angle2]})
-        data = pd.concat([data,new_row], ignore_index=True)
-
-        # Display the processed frame
-        cv2.imshow("Processed Frame", processed_frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        
-
-    cap.release()
-    out.release()
     
-    # Convert to csv
-    if len(data) == 0:
-        print("No Data Saved")
-    else:
-        dir_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Angle_Data"
-        files = os.listdir(dir_path)
-        i = len(files)
-        data.to_csv(f'Data_collection\Angle_Data\\angle_data_{i}.csv', index=False)
-        print(f"Data saved to 'angle_data_{i}.csv'.")
+    for filename in os.listdir(img_folder):
+        if filename.endswith(('.png', '.jpg', '.jpeg')):
+            img_path = os.path.join(img_folder, filename)
+            image = cv2.imread(img_path)
 
-    return angles1,angles2, output_path
-    # cv2.destroyAllWindows()
+            _, (a1, a2) = process_frame(image)
+            new_row = pd.DataFrame({
+                                 'Angle1(deg)': [a1],
+                                 'Angle2(deg)': [a2]})
+            data = pd.concat([data, new_row])
+    data.to_csv('angles_output.csv', index=False)
+    return 
 
-# Path for full image:
-path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output.avi"
-# Path for partial image:
-# path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_12.mp4"
-angles1,angles2,output_path =  analyze_video(path)
-
+analyze_pictures(r"C:\Users\softrobotslab\ArduinoMotors\TestData")

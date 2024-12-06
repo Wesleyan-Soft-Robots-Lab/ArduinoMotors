@@ -85,8 +85,8 @@ def process_frame(frame):
         cv2.circle(frame, (x3,y3), 5, (0, 255, 0), -1)
         cv2.line(frame, (x1,y1), (x2,y2), (255, 0, 0),2)
         cv2.line(frame, (x2,y2), (x3,y3), (255, 0, 0), 2)
-        cv2.putText(frame, f"Angle 1: {angle1:.1f}", (x1,y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
-        cv2.putText(frame, f"Angle 2: {angle2:.1f}", (x2,y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
+        cv2.putText(frame, f"Angle 1: {angle1:.2f}", (x1,y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
+        cv2.putText(frame, f"Angle 2: {angle2:.2f}", (x2,y2-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
 
         return frame, (angle1, angle2)
     
@@ -102,6 +102,7 @@ def analyze_video(video_path):
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS)
+    print(fps)
     output_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output_angle.avi"
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter(output_path, fourcc=fourcc, fps=fps, frameSize=(width, height))
@@ -109,7 +110,7 @@ def analyze_video(video_path):
     data = pd.DataFrame(columns = ['Time(s)',
                                    'Angle1(deg)',
                                    'Angle2(deg)'])
-    start_time = time.time()
+    # start_time = time.time()
 
     angles1 = []
     angles2 = []
@@ -130,8 +131,8 @@ def analyze_video(video_path):
             angles2.append(angle2)
 
         # Create new line of data
-        timed = time.time() - start_time
-        timed = round(timed,1)
+        timed = time.time()
+        # timed = round(timed,1)
         new_row = pd.DataFrame({'Time(s)': [timed],
                                  'Angle1(deg)': [angle1],
                                  'Angle2(deg)': [angle2]})

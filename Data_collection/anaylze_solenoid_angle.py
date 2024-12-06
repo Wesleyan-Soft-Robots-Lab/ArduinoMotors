@@ -76,10 +76,11 @@ def process_frame(frame):
         '''
         [(x1,y1), (x2,y2), (x3,y3)] = dot_positions
         # print(dot_positions)
-        angle1 = math.degrees(math.atan2(y1-y2,x1-x2))
+        angle1 = 90 - math.degrees(math.atan2(y1-y2,x1-x2))
         angle1 = round(angle1,2)
-        angle2 = math.degrees(math.atan2(y2-y3,x2-x3))
+        angle2 = 90 - math.degrees(math.atan2(y2-y3,x2-x3))
         angle2 = round(angle2,2)
+        angle1 = angle1 - angle2
         cv2.circle(frame, (x1,y1), 5, (0, 255, 0), -1)
         cv2.circle(frame, (x2,y2), 5, (0, 255, 0), -1)
         cv2.circle(frame, (x3,y3), 5, (0, 255, 0), -1)
@@ -107,7 +108,7 @@ def analyze_video(video_path):
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter(output_path, fourcc=fourcc, fps=fps, frameSize=(width, height))
 
-    data = pd.DataFrame(columns = ['Time(s)',
+    data = pd.DataFrame(columns = [
                                    'Angle1(deg)',
                                    'Angle2(deg)'])
     # start_time = time.time()
@@ -133,7 +134,7 @@ def analyze_video(video_path):
         # Create new line of data
         timed = time.time()
         # timed = round(timed,1)
-        new_row = pd.DataFrame({'Time(s)': [timed],
+        new_row = pd.DataFrame({
                                  'Angle1(deg)': [angle1],
                                  'Angle2(deg)': [angle2]})
         data = pd.concat([data,new_row], ignore_index=True)

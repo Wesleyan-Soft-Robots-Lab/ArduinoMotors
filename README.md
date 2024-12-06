@@ -43,7 +43,7 @@ Christian Diaz Herrera
 
 Kido Douglas
 
-Simon Chid
+Simon Chidley
 
 Reese Chahal
 

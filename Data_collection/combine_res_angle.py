@@ -68,10 +68,11 @@ def process_frame(frame):
         '''
         [(x1,y1), (x2,y2), (x3,y3)] = dot_positions
         # print(dot_positions)
-        angle1 = math.degrees(math.atan2(y1-y2,x1-x2))
+        angle1 = 90 - math.degrees(math.atan2(y1-y2,x1-x2))
         angle1 = round(angle1,2)
-        angle2 = math.degrees(math.atan2(y2-y3,x2-x3))
+        angle2 = 90 - math.degrees(math.atan2(y2-y3,x2-x3))
         angle2 = round(angle2,2)
+        angle1 = angle1 - angle2
         cv2.circle(frame, (x1,y1), 5, (0, 255, 0), -1)
         cv2.circle(frame, (x2,y2), 5, (0, 255, 0), -1)
         cv2.circle(frame, (x3,y3), 5, (0, 255, 0), -1)
@@ -167,5 +168,6 @@ def analyze_video(video_path):
 path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output.avi"
 # Path for partial image:
 # path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_12.mp4"
-angles1,angles2,output_path =  analyze_video(path)
+
+angles1,angles2,output_path = analyze_video(path)
 

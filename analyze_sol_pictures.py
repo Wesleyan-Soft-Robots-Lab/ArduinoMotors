@@ -87,41 +87,33 @@ def process_frame(frame):
 
 def analyze_pictures(img_folder):
     data = pd.DataFrame(columns=[
+                                   'imgnum',
                                    'Angle1(deg)',
-                                   'Angle2(deg)',
-                                   "imgnum"
+                                   'Angle2(deg)'
                                 
                                 ])
     
 
-    """  """
-
-    files = os.listdir(img_folder)
-    for file in files:
-        
-            int(index);
-
-
     for filename in os.listdir(img_folder):
         if filename.endswith(('.png', '.jpg', '.jpeg')):
             [_, index, _] = filename.split("_")
-
+            print(index)
+            index = int(index)
             img_path = os.path.join(img_folder, filename)
-            #image uint8 - when shown is grey image- path seems correct
-
-
             image = cv2.imread(img_path)
 
             _, (a1, a2) = process_frame(image)
             new_row = pd.DataFrame({
+                                 "imgnum": [index],
                                  'Angle1(deg)': [a1],
-                                 'Angle2(deg)': [a2],
-                                 "imgnum": [int(index)]})
+                                 'Angle2(deg)': [a2]})
             
             data = pd.concat([data, new_row])
 
-    data.sort_values(by= "imgnum")
+    data = data.sort_values(by= "imgnum")
     data.to_csv('angles_output.csv', index=False)
     return 
 
-analyze_pictures(r"C:\Users\softrobotslab\ArduinoMotors\TestData")
+# analyze_pictures(r"C:\Users\softrobotslab\ArduinoMotors\TestData")
+
+analyze_pictures(r'/Users/simon/Desktop/Wesleyan Classes/Soft Robot Lab/ArduinoMotors/TestData')

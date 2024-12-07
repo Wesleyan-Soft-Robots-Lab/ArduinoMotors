@@ -87,18 +87,39 @@ def process_frame(frame):
 def analyze_pictures(img_folder):
     data = pd.DataFrame(columns=[
                                    'Angle1(deg)',
-                                   'Angle2(deg)'])
+                                   'Angle2(deg)',
+                                   "imgnum"
+                                
+                                ])
     
+
+    """  """
+
+    files = os.listdir(img_folder)
+    for file in files:
+        
+            int(index);
+
+
     for filename in os.listdir(img_folder):
         if filename.endswith(('.png', '.jpg', '.jpeg')):
+            [_, index, _] = filename.split("_")
+
             img_path = os.path.join(img_folder, filename)
+            #image uint8 - when shown is grey image- path seems correct
+
+
             image = cv2.imread(img_path)
 
             _, (a1, a2) = process_frame(image)
             new_row = pd.DataFrame({
                                  'Angle1(deg)': [a1],
-                                 'Angle2(deg)': [a2]})
+                                 'Angle2(deg)': [a2],
+                                 "imgnum": [int(index)]})
+            
             data = pd.concat([data, new_row])
+
+    data.sort_values(by= "imgnum")
     data.to_csv('angles_output.csv', index=False)
     return 
 

@@ -47,15 +47,8 @@ def process_frame(frame):
                 dot_positions.append((int(cx),int(cy)))
                 cv2.circle(frame,(int(cx),int(cy)),r,(0,255,255),2)
 
-            # # Get the center of the dot
-            # M = cv2.moments(contour)
-            # if M["m00"] != 0:
-            #     cx = int(M["m10"] / M["m00"])
-            #     cy = int(M["m01"] / M["m00"])
-            #     dot_positions.append((cx, cy))
-
     # Separate visual frame to show mask
-    # mask = cv2.imshow("mask", mask)
+    # mask_show = cv2.imshow("mask", mask)
     
     # Calculate the center of the object (assuming it's the geometric center of the dots)
     if len(dot_positions) == 2: # If 2 dots on machine
@@ -70,8 +63,8 @@ def process_frame(frame):
         return frame, (angle,None)
     elif len(dot_positions) == 3: # If 3 dots on machine
         '''
-        Please note that this should work assuming the second dot is always at a
-        lower y position than the third (which I believe it should be) --Simon
+        Please note that this should work assuming the third dot is always at a
+        lower y position than the second (which I believe it should be) --Simon
         '''
         [(x1,y1), (x2,y2), (x3,y3)] = dot_positions
         # print(dot_positions)
@@ -93,6 +86,7 @@ def process_frame(frame):
 
         return frame, None
 
+# i might be able to get this function to run using the live feed instead of the recording
 def analyze_video(video_path):
     """
     Analyze video frames to detect red dots and calculate angles for each frame.
@@ -104,11 +98,19 @@ def analyze_video(video_path):
     output_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output_angle.avi"
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter(output_path, fourcc=fourcc, fps=fps, frameSize=(width, height))
-
+    frame_count = 0
+    reading_index = 0
     data = pd.DataFrame(columns = ['Time(s)',
+                                   'R1(O)', 
+                                   'R2(O)',
+                                   'R3(O)',
+                                   'R4(O)',
                                    'Angle1(deg)',
                                    'Angle2(deg)'])
-    start_time = time.time()
+    time_file = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_13.csv"
+    data_time = pd.read_csv(time_file)
+    readings_list = data_time.values.tolist()
+    # start_time = time.time()
 
     angles1 = []
     angles2 = []
@@ -116,8 +118,6 @@ def analyze_video(video_path):
         ret, frame = cap.read()
         if not ret:
             break
-        
-
         
         # Process each frame
         processed_frame, (angle1,angle2) = process_frame(frame)
@@ -131,19 +131,31 @@ def analyze_video(video_path):
             angles2.append(angle2)
 
         # Create new line of data
-        timed = time.time() - start_time
-        timed = round(timed,1)
-        new_row = pd.DataFrame({'Time(s)': [timed],
-                                 'Angle1(deg)': [angle1],
-                                 'Angle2(deg)': [angle2]})
-        data = pd.concat([data,new_row], ignore_index=True)
+        # timed = time.time() - start_time
+        # timed = round(timed,1)
+        # print(len(readings_list), reading_index)
+        if reading_index < len(readings_list):
 
+            curr_time, r1, r2, r3, r4 = readings_list[reading_index]
+            frame_time = frame_count/fps
+            # print(frame_time, curr_time)
+            if frame_time >= curr_time:
+                new_row = pd.DataFrame({'Time(s)': [curr_time],
+                                        'R1(O)': [r1],
+                                        'R2(O)': [r2],
+                                        'R3(O)': [r3],
+                                        'R4(O)': [r4],
+                                        'Angle1(deg)': [angle1],
+                                        'Angle2(deg)': [angle2]})
+                data = pd.concat([data,new_row], ignore_index=True)
+                reading_index += 1
+        frame_count += 1
         # Display the processed frame
         cv2.imshow("Processed Frame", processed_frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         
-    
+
     cap.release()
     out.release()
     
@@ -161,7 +173,7 @@ def analyze_video(video_path):
     # cv2.destroyAllWindows()
 
 # Path for full image:
-path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output.avi"
+path = r"C:\Users\softrobotslab\Pictures\Camera Roll\data_13_full.mp4"
 # Path for partial image:
 # path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_12.mp4"
 angles1,angles2,output_path =  analyze_video(path)

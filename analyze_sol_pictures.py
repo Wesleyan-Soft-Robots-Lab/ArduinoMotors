@@ -26,10 +26,10 @@ def process_frame(frame):
     mask = cv2.bitwise_or(mask1, mask2)
     mask = cv2.GaussianBlur(mask, (5,5),0)
     # Separate visual frame to show mask
-    # mask = cv2.imshow("mask", mask)
+    # mask_img = cv2.imshow("mask", mask)
     # Find contours of the black dots
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    
+
     # Filter contours by size (to exclude noise)
     dot_positions = []
     for contour in contours:
@@ -43,14 +43,14 @@ def process_frame(frame):
                 continue
             circ = 4 * np.pi * (area/(perimeter**2))
             # If circle, add to dot list.
-            if circ >= 0.7 and circ <= 1.3:   
+            if circ >= 0.8 and circ <= 1.2:   
                 dot_positions.append((int(cx),int(cy)))
                 cv2.circle(frame,(int(cx),int(cy)),r,(0,255,255),2)
 
     # Calculate the center of the object (assuming it's the geometric center of the dots)
     if len(dot_positions) == 2: # If 2 dots on machine
         (x1, y1), (x2, y2) = dot_positions
-        angle = math.degrees(math.atan2(y1-y2, x1 - x2))
+        angle = 90 - math.degrees(math.atan2(y1-y2, x1 - x2))
         angle = round(angle,2)
         cv2.circle(frame, (x1,y1), 5, (0, 255, 0), -1)
         cv2.circle(frame, (x2,y2), 5, (0, 255, 0), -1)
@@ -65,10 +65,11 @@ def process_frame(frame):
         '''
         [(x1,y1), (x2,y2), (x3,y3)] = dot_positions
         # print(dot_positions)
-        angle1 = math.degrees(math.atan2(y1-y2,x1-x2))
+        angle1 = 90 - math.degrees(math.atan2(y1-y2,x1-x2))
         angle1 = round(angle1,2)
-        angle2 = math.degrees(math.atan2(y2-y3,x2-x3))
+        angle2 = 90 - math.degrees(math.atan2(y2-y3,x2-x3))
         angle2 = round(angle2,2)
+        angle1 -= angle2
         cv2.circle(frame, (x1,y1), 5, (0, 255, 0), -1)
         cv2.circle(frame, (x2,y2), 5, (0, 255, 0), -1)
         cv2.circle(frame, (x3,y3), 5, (0, 255, 0), -1)

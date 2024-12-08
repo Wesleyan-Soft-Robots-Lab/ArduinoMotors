@@ -42,7 +42,7 @@ class ConvClassifier(nn.Module):
     
     
 class LSTMRegressor(nn.Module):
-    def __init__(self, input_size, batch_size, hidden_size=16, num_layers=1, output_size=1):
+    def __init__(self, input_size, batch_size, hidden_size=16, num_layers=1, output_size=2):
         super(LSTMRegressor, self).__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers

@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 
-VIDEO_FPS = 60
+VIDEO_FPS = 20
 SENSOR_SAMPLING_RATE = 42
 
 def match_length(sensor_data: np.ndarray, video_data: np.ndarray) -> np.ndarray:
@@ -70,33 +70,33 @@ def match_serial_video_main():
     Returns:
         results (list): A list of pandas DataFrames containing the matched sensor data and video data.
     """
-    sensor_data_path = 'Reader/balloon_data/Preprocessed'
+    sensor_data_path = r'C:\Users\softrobotslab\ArduinoMotors\Training_data'
     sensor_data = []
     for trial_num in range(1, 5):
-        file = f'Trial_{trial_num}_serial.csv'
+        file = f'sensor_data_{trial_num}.csv'
         trial_data = []
         df = pd.read_csv(os.path.join(sensor_data_path, file))
-        for row in df['Data'].values:
-            tmp = row.split(' ')
-            time, r1, r2 = int(tmp[0]), float(tmp[1]), float(tmp[2])
-            trial_data.append([r1, r2])
+        for row in df:
+            # tmp = row.split(' ')
+            time, r1, r2, r3, r4 = row['Time(s)'], row['R1(O)'], row['R2(O)'], row['R3(O)'], row['R4(O)']
+            trial_data.append([r1, r2, r3, r4])
         sensor_data.append(np.array(trial_data))
     
-    video_data_path = 'Data/balloon_data'
+    video_data_path = r'C:\Users\softrobotslab\ArduinoMotors\Data_collection\Training_data_angle'
     results = []
     for trial_num in range(1,5):
-        file = f'trial_{trial_num}.txt'
-        video_data = np.loadtxt(os.path.join(video_data_path, file))
-        sensor_data[trial_num-1] = match_length(sensor_data[trial_num-1], video_data)
-        print(sensor_data[trial_num-1].shape, video_data.shape)
+        file = f'angle_data_{trial_num}.csv'
+        video_data = pd.read_csv(os.path.join(video_data_path, file))
+        sensor_data[trial_num] = match_length(sensor_data[trial_num], video_data)
+        print(sensor_data[trial_num].shape, video_data.shape)
         if VIDEO_FPS < SENSOR_SAMPLING_RATE:
-            sensor_data[trial_num-1] = downsample_data(video_data, sensor_data[trial_num-1])
+            sensor_data[trial_num] = downsample_data(video_data, sensor_data[trial_num])
         else:
-            video_data = downsample_data(sensor_data[trial_num-1], video_data)
+            video_data = downsample_data(sensor_data[trial_num], video_data)
         
-        zipped_df = pd.DataFrame(list(zip(sensor_data[trial_num-1], video_data)))
+        zipped_df = pd.DataFrame(list(zip(sensor_data[trial_num], video_data)))
         zipped_df = remove_error_data(zipped_df)
-        zipped_df.to_csv(f'Data/balloon_data/matched_data_trial_{trial_num}.csv')
+        zipped_df.to_csv(f'Angle_Test_Data/matched_data_trial_{trial_num}.csv')
 
         results.append(zipped_df)
     

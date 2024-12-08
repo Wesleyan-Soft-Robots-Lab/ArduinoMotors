@@ -184,7 +184,7 @@ def model_test():
         model = LSTMRegressor(2, 16, num_layers=2)
         model.load_state_dict(torch.load(f"Model/model/LSTMRegressor_{lb}.pth"))
         model.eval()
-        dataset = SerialRNNDataset(lookback=lb, group_num=[2, 3])
+        dataset = SerialRNNDataset(lookback=lb)
         _, test_loader = prep_dataset(dataset, 16, test_size=0.99)
         all_acc[i] = test(model, test_loader, "test", "regression")
     
@@ -212,10 +212,10 @@ def train_serial_main(lookback=42, num_epoch=5000):
     """
     Trains a model for pose estimation on the serial reading from Arduino.
     """
-    dataset = SerialRNNDataset(lookback=lookback, group_num=[2, 3])
-    batch_size = 16
+    dataset = SerialRNNDataset(lookback=lookback)
+    batch_size = 32
     train_loader, test_loader = prep_dataset(dataset, batch_size)
-    model, save_name = LSTMRegressor(2, batch_size, num_layers=2), f"LSTMRegressor_{lookback}"
+    model, save_name = LSTMRegressor(4, batch_size, num_layers=2, output_size=2), f"LSTMRegressor_strap_{lookback}"
     # model.load_state_dict(torch.load(f"Model/model/{save_name}.pth"))
     model, all_loss, all_acc = train(model, num_epoch, train_loader, test_loader, dataset, save_name, "regression", show_plot=False)
 
@@ -233,4 +233,4 @@ if __name__ == "__main__":
     #         acc[i] = result[2][-1]
 
 
-    model_test()
+    train_serial_main()

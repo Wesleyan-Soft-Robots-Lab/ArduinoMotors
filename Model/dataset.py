@@ -8,7 +8,7 @@ from torch.utils.data import Dataset
 from sklearn.model_selection import StratifiedShuffleSplit, train_test_split # type: ignore
 
 sys.path.append('.')
-# from Reader.preprocess.match_data import match_serial_video_main
+from preprocess.prep_data import combine_files
 
 class BaseDataset(Dataset):
     def __init__(self) -> None:
@@ -78,23 +78,23 @@ class BaseDatasetforRegression(BaseDataset):
 
 
 class SerialRNNDataset(BaseDatasetforRegression):
-    def __init__(self, lookback: int = 3, group_num: list[int] = [2,3]):
+    def __init__(self, lookback: int = 3):
         super().__init__()
         self.look_back = lookback
-        all_data = pd.read_csv(r'C:\Users\softrobotslab\ArduinoMotors\Data_collection\Angle_Data\angle_data_16.csv')
-        for _, id, df in enumerate(all_data):
-            if id not in group_num: continue
+        all_data = combine_files()
+        for df in all_data:
             for index, row in df.iterrows():
-                if index < 150: continue
-                if all([df.at[index-i, 'E'] for i in range(lookback)]):
-                    self.input.append(np.array([np.array(df.loc[index-i][0]) for i in range(lookback)]))
-                    self.labels.append(row[1])
+                if index < 50: continue
+                # if all([df.at[index-i, 'E'] for i in range(lookback)]):
+                self.input.append(np.array([np.array(df.loc[index-i][0]) for i in range(lookback)]))
+                self.labels.append(row[1])
                     # print(self.input[-1], self.labels[-1])
         
         self.input = np.array(self.input) # type: ignore
         self.labels = np.array(self.labels) # type: ignore
         self.input = (self.input - np.mean(self.input, axis=0))
         self.labels = self.labels / 90 # type: ignore
+        # print(self.input.shape)
 
         # import matplotlib.pyplot as plt
         # plt.figure()
@@ -201,7 +201,7 @@ class RigDataset(BaseDatasetforClassification):
                     # print(df.columns)
 
 if __name__ == "__main__":
-    data_path = "Data/Multimeter"
+    data_path = r'C:\Users\softrobotslab\ArduinoMotors\Training_data'
     data = RigDataset(data_path)
     data.split()
     data.save("Model/dataset/strap_dataset.pickle")

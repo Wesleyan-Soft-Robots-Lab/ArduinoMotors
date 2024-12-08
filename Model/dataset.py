@@ -93,7 +93,7 @@ class SerialRNNDataset(BaseDatasetforRegression):
         self.input = np.array(self.input) # type: ignore
         self.labels = np.array(self.labels) # type: ignore
         self.input = (self.input - np.mean(self.input, axis=0))
-        self.labels = self.labels / 90 # type: ignore
+        # self.labels = self.labels / 90 # type: ignore
         # print(self.input.shape)
 
         # import matplotlib.pyplot as plt

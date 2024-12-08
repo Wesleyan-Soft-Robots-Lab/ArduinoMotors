@@ -103,7 +103,7 @@ def analyze_video(video_path):
     data = pd.DataFrame(columns = ['Time(s)',
                                    'R1(O)','R2(O)', 'R3(O)', 'R4(O)',
                                    'Angle1(deg)', 'Angle2(deg)'])
-    time_file = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_18.csv"
+    time_file = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_20.csv"
     data_time = pd.read_csv(time_file)
     readings_list = data_time.values.tolist()
     # start_time = time.time()

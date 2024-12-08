@@ -55,8 +55,11 @@ class LSTMRegressor(nn.Module):
         c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size, dtype=torch.float32).to(device)
         for pos in range(x.size(1)):
             out, (h0, c0) = self.lstm(x[:,pos,:].unsqueeze(1), (h0, c0))
+        # print(len(out[0]))
         out = self.fc(out[:, -1, :])
-        return out[:, 0]
+        # print(len(out[0]))
+        # print(len(out[:, 0][0]))
+        return out
 
 class FCRegressor(nn.Module):
     def __init__(self, input_size, batch_size):

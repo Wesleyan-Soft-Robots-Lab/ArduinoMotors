@@ -81,10 +81,14 @@ def train(
     elif train_type == "regression":
         criterion = nn.MSELoss() # type: ignore
         # criterion = nn.L1Loss() # type: ignore
-    optimizer = optim.AdamW(model.parameters(), lr=0.001)
+    optimizer = optim.AdamW(model.parameters(), lr=0.0001)
 
     all_loss = []
     all_acc = []
+    # for batch in train_loader:
+    #     if torch.isnan(batch).any():
+    #         print('Nan detected in input data')
+    #         break
     print("Training model...")
     for epoch in range(num_epoch):
         running_loss = 0.0
@@ -94,6 +98,8 @@ def train(
             optimizer.zero_grad()
 
             output = model(input)
+            # print(len(output))
+            # print(len(label))
             loss = criterion(output, label)
             # print(input[:3, -2:, :], label[:3], output[:3])
             loss.backward()
@@ -166,6 +172,8 @@ def test(model: nn.Module, test_loader: DataLoader, title: str, type: str):
                 all_labels = torch.cat((all_labels, label))
         
         if type == "regression":
+            print('all labels: ',all_labels)
+            print('all pred: ',all_pred)
             r2 = r2_score(all_labels.cpu().numpy(), all_pred.cpu().numpy())
             print(f"R2 Score on {title} set: {r2}")
             return r2
@@ -181,7 +189,7 @@ def model_test():
     lookback = [5,10,15,20,25,30,35,40]
     all_acc = np.zeros(8)
     for i, lb in enumerate(lookback):
-        model = LSTMRegressor(2, 16, num_layers=2)
+        model = LSTMRegressor(4, 16, num_layers=2)
         model.load_state_dict(torch.load(f"Model/model/LSTMRegressor_{lb}.pth"))
         model.eval()
         dataset = SerialRNNDataset(lookback=lb)
@@ -215,9 +223,9 @@ def train_serial_main(lookback=42, num_epoch=5000):
     dataset = SerialRNNDataset(lookback=lookback)
     batch_size = 32
     train_loader, test_loader = prep_dataset(dataset, batch_size)
-    model, save_name = LSTMRegressor(4, batch_size, num_layers=2, output_size=2), f"LSTMRegressor_strap_{lookback}"
+    model, save_name = LSTMRegressor(input_size=4, batch_size=batch_size, num_layers=2, output_size=2), f"LSTMRegressor_strap_{lookback}"
     # model.load_state_dict(torch.load(f"Model/model/{save_name}.pth"))
-    model, all_loss, all_acc = train(model, num_epoch, train_loader, test_loader, dataset, save_name, "regression", show_plot=False)
+    model, all_loss, all_acc = train(model, num_epoch, train_loader, test_loader, dataset, save_name, "regression", show_plot=True)
 
     return lookback, all_loss, all_acc
 

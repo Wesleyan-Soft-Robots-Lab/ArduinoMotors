@@ -25,7 +25,7 @@ def combine_files():
             # print(len(trial_data))
             df = pd.DataFrame(list(trial_data))
             results.append(df)
-        # print(len(results))
+        # print(results)
     return results
 
 if __name__ == '__main__':

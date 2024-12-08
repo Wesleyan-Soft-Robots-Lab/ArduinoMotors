@@ -86,14 +86,22 @@ class SerialRNNDataset(BaseDatasetforRegression):
             for index, row in df.iterrows():
                 if index < 50: continue
                 # if all([df.at[index-i, 'E'] for i in range(lookback)]):
+                if any(np.isnan(row[1])):
+                    print(index)
+                    continue
                 self.input.append(np.array([np.array(df.loc[index-i][0]) for i in range(lookback)]))
                 self.labels.append(row[1])
                     # print(self.input[-1], self.labels[-1])
         
         self.input = np.array(self.input) # type: ignore
         self.labels = np.array(self.labels) # type: ignore
+        print(type(self.input))
+        # print(self.labels)
         self.input = (self.input - np.mean(self.input, axis=0))
-        # self.labels = self.labels / 90 # type: ignore
+        self.labels = self.labels / 90 # type: ignore
+        self.input = torch.from_numpy(self.input).to(dtype=torch.float32)
+        self.labels = torch.from_numpy(self.labels).to(dtype=torch.float32)
+
         # print(self.input.shape)
 
         # import matplotlib.pyplot as plt

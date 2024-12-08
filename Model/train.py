@@ -9,6 +9,7 @@ from torch.utils.data import Dataset, DataLoader
 from sklearn.metrics import mean_squared_error, r2_score # type: ignore
 import matplotlib.pyplot as plt # type: ignore
 import concurrent.futures as cf
+from tqdm import trange
 
 sys.path.append(".")
 from Model.model import *  # type: ignore
@@ -90,7 +91,7 @@ def train(
     #         print('Nan detected in input data')
     #         break
     print("Training model...")
-    for epoch in range(num_epoch):
+    for epoch in trange(num_epoch):
         running_loss = 0.0
         for input, label in train_loader:
             input, label = input.to(device, dtype=torch.float32), label.to(device, dtype=torch.float32)
@@ -98,11 +99,18 @@ def train(
             optimizer.zero_grad()
 
             output = model(input)
+            # print("input", input)
+            # print("label", label)
+            # print("output", output)
             # print(len(output))
             # print(len(label))
             loss = criterion(output, label)
+            # fixed_value = 1.0
+            # loss = torch.tensor(fixed_value, requires_grad=True, device=output.device)
+            # print(loss)
             # print(input[:3, -2:, :], label[:3], output[:3])
             loss.backward()
+
             optimizer.step()
 
             running_loss += loss.item()
@@ -216,7 +224,7 @@ def train_rig_main():
     model = train(model, 30, train_loader, test_loader, dataset, save_name)
 
 
-def train_serial_main(lookback=42, num_epoch=5000):
+def train_serial_main(lookback=20, num_epoch=5000):
     """
     Trains a model for pose estimation on the serial reading from Arduino.
     """
@@ -241,4 +249,4 @@ if __name__ == "__main__":
     #         acc[i] = result[2][-1]
 
 
-    train_serial_main()
+    train_serial_main(num_epoch=200)

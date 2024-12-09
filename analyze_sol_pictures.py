@@ -29,11 +29,13 @@ def process_frame(frame):
     # mask_img = cv2.imshow("mask", mask)
     # Find contours of the black dots
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
     # Filter contours by size (to exclude noise)
     dot_positions = []
+
     for contour in contours:
-        if cv2.contourArea(contour) > 500:  # Example size threshold
+        
+        #im not exactly sure if 250 is the correct threshold
+        if cv2.contourArea(contour) > 250:  # Example size threshold
             (cx, cy), r = cv2.minEnclosingCircle(contour)
             r = int(r)
             # Determine whether dot is circle
@@ -43,7 +45,7 @@ def process_frame(frame):
                 continue
             circ = 4 * np.pi * (area/(perimeter**2))
             # If circle, add to dot list.
-            if circ >= 0.8 and circ <= 1.2:   
+            if circ >= 0.7 and circ <= 1.3:   
                 dot_positions.append((int(cx),int(cy)))
                 cv2.circle(frame,(int(cx),int(cy)),r,(0,255,255),2)
 
@@ -64,7 +66,7 @@ def process_frame(frame):
         lower y position than the third (which I believe it should be) --Simon
         '''
         [(x1,y1), (x2,y2), (x3,y3)] = dot_positions
-        # print(dot_positions)
+        
         angle1 = 90 - math.degrees(math.atan2(y1-y2,x1-x2))
         angle1 = round(angle1,2)
         angle2 = 90 - math.degrees(math.atan2(y2-y3,x2-x3))
@@ -81,7 +83,6 @@ def process_frame(frame):
         return frame, (angle1, angle2)
     
     else:
-
         return frame, (None, None)
 
 
@@ -89,39 +90,30 @@ def analyze_pictures(img_folder):
     data = pd.DataFrame(columns=[
                                    'Angle1(deg)',
                                    'Angle2(deg)',
-                                   "imgnum"
-                                
+                                   'imageNum'    
                                 ])
-    
-
-    """  """
-
-    files = os.listdir(img_folder)
-    for file in files:
-        
-            int(index);
-
 
     for filename in os.listdir(img_folder):
         if filename.endswith(('.png', '.jpg', '.jpeg')):
-            [_, index, _] = filename.split("_")
+            [_,index, _] = filename.split("_")
 
             img_path = os.path.join(img_folder, filename)
-            #image uint8 - when shown is grey image- path seems correct
-
 
             image = cv2.imread(img_path)
 
-            _, (a1, a2) = process_frame(image)
+            _,(a1, a2) = process_frame(image)
             new_row = pd.DataFrame({
                                  'Angle1(deg)': [a1],
                                  'Angle2(deg)': [a2],
-                                 "imgnum": [int(index)]})
+                                 'imageNum': [int(index)]})
             
             data = pd.concat([data, new_row])
 
-    data.sort_values(by= "imgnum")
+    data = data.sort_values(by= 'imageNum', ascending= True)
     data.to_csv('angles_output.csv', index=False)
     return 
 
-analyze_pictures(r"C:\Users\softrobotslab\ArduinoMotors\TestData")
+#analyze_pictures(r"C:\Users\softrobotslab\ArduinoMotors\TestData")
+
+#personal dir. Comment out/delete
+analyze_pictures(r"C:\Users\miles\Documents\GitHub\ArduinoMotors\TestData")

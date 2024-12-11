@@ -72,7 +72,7 @@ def dataset_to_numpy(dataloader) -> tuple[np.ndarray, np.ndarray]:
 
 
 def write_LSTMRegressor_weights(W_xh, W_hh, b_h, W, b):
-    with open("Model/matrix_form/LSTMRegressorWeights.txt", "w") as file:
+    with open("Model/matrix_form/LSTMRegressorWeights_strap_20.txt", "w") as file:
         for i in range(W_hh.shape[0]):
             for j in range(W_hh.shape[1]):
                 print(
@@ -120,14 +120,14 @@ def write_LSTMRegressor_weights(W_xh, W_hh, b_h, W, b):
             
 
 def main_comp():
-    batch_size = 1
-    model = LSTMRegressor(2, batch_size, num_layers=2)
+    batch_size = 32
+    model = LSTMRegressor(input_size=4, batch_size=batch_size, num_layers=2,output_size=2)
     model.load_state_dict(
         torch.load(
-            f"Model/model/LSTMRegressor_40.pth", map_location=torch.device("cuda")
+            f"Model/model/LSTMRegressor_strap_20.pth", map_location=torch.device("cuda")
         )
     )
-    dataset = SerialRNNDataset(lookback=40, group_num=[2, 3])
+    dataset = SerialRNNDataset(lookback=20)
     _, test_loader = prep_dataset(dataset, batch_size, test_size=0.99)
     test_array, target_array = dataset_to_numpy(test_loader)
     print(test_array.shape)
@@ -166,7 +166,7 @@ def main_comp():
     for i in range(len(W_xh)):
         structured_data[f"W_xh_{i}"] = W_xh[i]
 
-    np.save("Model/matrix_form/LSTMRegressor.npy", structured_data)
+    np.save("Model/matrix_form/LSTMRegressor_strap.npy", structured_data)
 
     write_LSTMRegressor_weights(W_xh, W_hh, b_h, W, b)
 

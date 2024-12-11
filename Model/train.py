@@ -114,7 +114,7 @@ def train(
             optimizer.step()
 
             running_loss += loss.item()
-        print(output[:3].detach().cpu().numpy()*90, label[:3].detach().cpu().numpy()*90)
+        # print(output[:3].detach().cpu().numpy()*90, label[:3].detach().cpu().numpy()*90)
         test(model, train_loader, "train", train_type)
         test_acc = test(model, test_loader, "test", train_type)
         all_acc.append(test_acc)
@@ -180,8 +180,8 @@ def test(model: nn.Module, test_loader: DataLoader, title: str, type: str):
                 all_labels = torch.cat((all_labels, label))
         
         if type == "regression":
-            print('all labels: ',all_labels)
-            print('all pred: ',all_pred)
+            # print('all labels: ',all_labels)
+            # print('all pred: ',all_pred)
             r2 = r2_score(all_labels.cpu().numpy(), all_pred.cpu().numpy())
             print(f"R2 Score on {title} set: {r2}")
             return r2
@@ -224,7 +224,7 @@ def train_rig_main():
     model = train(model, 30, train_loader, test_loader, dataset, save_name)
 
 
-def train_serial_main(lookback=20, num_epoch=5000):
+def train_serial_main(lookback=42, num_epoch=5000):
     """
     Trains a model for pose estimation on the serial reading from Arduino.
     """
@@ -249,4 +249,4 @@ if __name__ == "__main__":
     #         acc[i] = result[2][-1]
 
 
-    train_serial_main(num_epoch=200)
+    train_serial_main()

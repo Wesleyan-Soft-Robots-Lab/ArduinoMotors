@@ -87,7 +87,7 @@ class SerialRNNDataset(BaseDatasetforRegression):
                 if index < 50: continue
                 # if all([df.at[index-i, 'E'] for i in range(lookback)]):
                 if any(np.isnan(row[1])):
-                    print(index)
+                    # print(index)
                     continue
                 self.input.append(np.array([np.array(df.loc[index-i][0]) for i in range(lookback)]))
                 self.labels.append(row[1])

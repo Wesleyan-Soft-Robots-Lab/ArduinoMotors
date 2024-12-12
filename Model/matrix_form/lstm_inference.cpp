@@ -9,7 +9,7 @@ using namespace Eigen;
 
 /*
 (3804, 40, 2)
-[(64, 2), (64, 16)] (2, 64, 16) (2, 64) (1, 16) (1,)
+[(64, 2), (64, 16)] (2, 64, 16) (2, 64) (1, 16) (2,)
 */
 
 std::vector<std::string> splitString(const std::string &str, char delimiter)
@@ -31,12 +31,12 @@ Matrix<double, 64, 16> W_2h;
 std::vector<MatrixXd> W_hh(2, MatrixXd(64, 16));
 Matrix<double, 2, 64> b_h;
 Matrix<double, 1, 16> W;
-Matrix<double, 1, 1> b;
+Matrix<double, 2, 2> b;
 std::vector<MatrixXd> test_array(3804, MatrixXd(40, 2));
 
 void load_test_array()
 {
-    std::ifstream file("test_array.txt");
+    std::ifstream file("test_array1.txt");
     std::string line;
     for (int i = 0; i < 3804; i++)
     {
@@ -55,7 +55,7 @@ void load_test_array()
 
 void load_model_weights()
 {
-    std::ifstream file("LSTMRegressorWeights.txt");
+    std::ifstream file("LSTMRegressorWeights_strap_42.txt");
     std::string line;
     for (int i = 0; i < 2; i++)
     {

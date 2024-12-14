@@ -89,6 +89,7 @@ def process_frame(frame):
 def analyze_pictures(img_folder):
     data = pd.DataFrame(columns=[
                                    'imgnum',
+                                   'timestamp',
                                    'Angle1(deg)',
                                    'Angle2(deg)'
                                 
@@ -97,8 +98,8 @@ def analyze_pictures(img_folder):
 
     for filename in os.listdir(img_folder):
         if filename.endswith(('.png', '.jpg', '.jpeg')):
-            [_, index, _] = filename.split("_")
-
+            [_, index, timestamp_raw] = filename.split("_")
+            timestamp = timestamp_raw.split(".")[0] + "." + timestamp_raw.split(".")[1]
             img_path = os.path.join(img_folder, filename)
             #image uint8 - when shown is grey image- path seems correct
 
@@ -108,6 +109,7 @@ def analyze_pictures(img_folder):
             _,(a1, a2) = process_frame(image)
             new_row = pd.DataFrame({
                                  "imgnum": [int(index)],
+                                 "timestamp": [timestamp],
                                  'Angle1(deg)': [round(a1,2)],
                                  'Angle2(deg)': [round(a2,2)]})
             
@@ -119,4 +121,4 @@ def analyze_pictures(img_folder):
 
 # analyze_pictures(r"C:\Users\softrobotslab\ArduinoMotors\TestData")
 
-analyze_pictures(r"/Users/simon/Desktop/Wesleyan Classes/Soft Robot Lab/ArduinoMotors/TestData")
+analyze_pictures(r"TestData")

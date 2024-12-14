@@ -7,7 +7,7 @@ import os
 
 start_event = threading.Event()
 stop_event = threading.Event()
-dir_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data"
+dir_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Video_data_new"
 files = os.listdir(dir_path)
 
 def capture_video(output):
@@ -60,10 +60,10 @@ def read_resistance(port, baudrate):
                 line = ser.readline().decode('utf-8').strip()
                 parts = line.split()
                 timed = time.time()
-                r1 = parts[1]
-                r2 = parts[2]
-                r3 = parts[3]
-                r4 = parts[4]
+                r1 = parts[2]
+                r2 = parts[3]
+                r3 = parts[4]
+                r4 = parts[5]
                 print(f'Serial data: {timed, r1, r2, r3, r4}')
                 new_row = pd.DataFrame({'Time(s)': [timed],
                                         'R1(O)': [r1],
@@ -84,17 +84,17 @@ def read_resistance(port, baudrate):
         else:
             # Save to CSV when the script ends
             i = len(files)
-            data.to_csv(f'Data_collection\Data\sensor_data_{i}.csv', index=False)
+            data.to_csv(f'Data_collection\Video_data_new\sensor_data_{i}.csv', index=False)
             print(f"Data saved to 'sensor_data_{i}.csv'.")
 
 if __name__ == '__main__':
 
     # running = True
 
-    output = r'C:\Users\softrobotslab\ArduinoMotors\Data_collection\output.avi'
+    output = r'C:\Users\softrobotslab\ArduinoMotors\videos\output_8.avi'
 
     video_thread = threading.Thread(target=capture_video, args=(output,))
-    serial_thread = threading.Thread(target=read_resistance, args=('COM5', 9600))
+    serial_thread = threading.Thread(target=read_resistance, args=('COM7', 9600))
     video_thread.start()
     serial_thread.start()
 

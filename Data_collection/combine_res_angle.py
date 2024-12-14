@@ -11,6 +11,7 @@ def process_frame(frame):
     """
     # Convert the frame to grayscale
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    ycc = cv2.cvtColor(frame, cv2.COLOR_RGB2YCR_CB)
     
     # Threshold the image to isolate black dots (assume black dots are darker than 50 intensity)
     # thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
@@ -96,7 +97,7 @@ def analyze_video(video_path):
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS)
-    output_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output_angle.avi"
+    output_path = r"C:\Users\softrobotslab\ArduinoMotors\videos\output_angle_8.avi"
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter(output_path, fourcc=fourcc, fps=fps, frameSize=(width, height))
     frame_count = 0
@@ -104,7 +105,7 @@ def analyze_video(video_path):
     data = pd.DataFrame(columns = ['Time(s)',
                                    'R1(O)','R2(O)', 'R3(O)', 'R4(O)',
                                    'Angle1(deg)', 'Angle2(deg)'])
-    time_file = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Data\sensor_data_24.csv"
+    time_file = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Video_data_new\sensor_data_8.csv"
     data_time = pd.read_csv(time_file)
     readings_list = data_time.values.tolist()
     # start_time = time.time()
@@ -156,17 +157,17 @@ def analyze_video(video_path):
     if len(data) == 0:
         print("No Data Saved")
     else:
-        dir_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Angle_Data"
+        dir_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Angle_data_new"
         files = os.listdir(dir_path)
         i = len(files)
-        data.to_csv(f'Data_collection\Angle_Data\\angle_data_{i}.csv', index=False)
+        data.to_csv(r'Data_collection\Angle_data_new\angle_data_8.csv', index=False)
         print(f"Data saved to 'angle_data_{i}.csv'.")
 
     return angles1,angles2, output_path
     # cv2.destroyAllWindows()
 
 # Path for full image:
-path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output.avi"
+path = r"C:\Users\softrobotslab\ArduinoMotors\videos\output_8.avi"
 # Path for partial image:
 # path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_12.mp4"
 

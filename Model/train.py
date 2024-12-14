@@ -24,7 +24,7 @@ else:
 print(f"Using device: {device}")
 
 
-def prep_dataset(dataset: BaseDataset, batch_size: int, test_size: float=1/3) -> tuple[DataLoader, DataLoader]: # type: ignore
+def prep_dataset(dataset: BaseDataset, batch_size: int, test_size: float=1/3, shuffle = True) -> tuple[DataLoader, DataLoader]: # type: ignore
     """
     Prepares the dataset for training and testing.
 
@@ -38,8 +38,8 @@ def prep_dataset(dataset: BaseDataset, batch_size: int, test_size: float=1/3) ->
     """
     train_set, test_set = dataset.split(test_size=test_size)
 
-    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
-    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=shuffle)
+    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=shuffle)
 
     return train_loader, test_loader
 
@@ -82,7 +82,7 @@ def train(
     elif train_type == "regression":
         criterion = nn.MSELoss() # type: ignore
         # criterion = nn.L1Loss() # type: ignore
-    optimizer = optim.AdamW(model.parameters(), lr=0.0001)
+    optimizer = optim.AdamW(model.parameters(), lr=0.001)
 
     all_loss = []
     all_acc = []
@@ -224,14 +224,14 @@ def train_rig_main():
     model = train(model, 30, train_loader, test_loader, dataset, save_name)
 
 
-def train_serial_main(lookback=42, num_epoch=5000):
+def train_serial_main(lookback=3, num_epoch=5000):
     """
     Trains a model for pose estimation on the serial reading from Arduino.
     """
     dataset = SerialRNNDataset(lookback=lookback)
-    batch_size = 32
+    batch_size = 16
     train_loader, test_loader = prep_dataset(dataset, batch_size)
-    model, save_name = LSTMRegressor(input_size=4, batch_size=batch_size, num_layers=2, output_size=2), f"LSTMRegressor_strap_{lookback}"
+    model, save_name = LSTMRegressor(input_size=4, batch_size=batch_size, num_layers=2, output_size=2), f"LSTMRegressor_strap_norm_{lookback}"
     # model.load_state_dict(torch.load(f"Model/model/{save_name}.pth"))
     model, all_loss, all_acc = train(model, num_epoch, train_loader, test_loader, dataset, save_name, "regression", show_plot=True)
 
@@ -249,4 +249,4 @@ if __name__ == "__main__":
     #         acc[i] = result[2][-1]
 
 
-    train_serial_main()
+    train_serial_main(num_epoch=300)

@@ -8,13 +8,17 @@ from torch.utils.data import Dataset
 from sklearn.model_selection import StratifiedShuffleSplit, train_test_split # type: ignore
 
 sys.path.append('.')
-from preprocess.prep_data import combine_files
+from preprocess.prep_data import combine_files, read_1_file
 
 class BaseDataset(Dataset):
     def __init__(self) -> None:
         super().__init__()
         self.input = [] # type: list
         self.labels = [] # type: list
+        # self.meani = 0
+        # self.meanl = 0
+        # self.stdi = 0
+        # self.stdl = 0
         self.train_set: list | None = None
         self.test_set: list | None = None
     
@@ -71,17 +75,21 @@ class BaseDatasetforRegression(BaseDataset):
     def __init__(self) -> None:
         super().__init__()
 
-    def split(self, test_size: float = 1/3):
-        self.train_set, self.test_set = train_test_split(list(zip(self.input, self.labels)), test_size=test_size)
+    def split(self, test_size: float = 1/3, shuffle=True):
+        self.train_set, self.test_set = train_test_split(list(zip(self.input, self.labels)), test_size=test_size, shuffle=shuffle)
         return self.train_set, self.test_set
 
 
 
 class SerialRNNDataset(BaseDatasetforRegression):
-    def __init__(self, lookback: int = 3):
+    def __init__(self, lookback: int = 3, file_path = None):
         super().__init__()
         self.look_back = lookback
-        all_data = combine_files()
+        if file_path is not None:
+            all_data = read_1_file(file_path=file_path)
+        else:
+            all_data = combine_files()
+    
         for df in all_data:
             for index, row in df.iterrows():
                 if index < 50: continue
@@ -97,9 +105,16 @@ class SerialRNNDataset(BaseDatasetforRegression):
         self.labels = np.array(self.labels) # type: ignore
         # print(type(self.input))
         # print(self.labels)
-        # self.input = (self.input - np.mean(self.input, axis=0))
+        self.input = (self.input - np.mean(self.input, axis=0))
         # print(np.mean(self.input, axis=0))
-        # self.labels = self.labels / 90 # type: ignore
+        self.labels = self.labels / 90 # type: ignore
+
+        meani, stdi = np.mean(self.input, axis=0), np.std(self.input, axis=0)
+        # self.meani, self.stdi = meani, stdi
+        meanl, stdl = np.mean(self.labels, axis=0), np.std(self.labels, axis=0)
+        # self.meanl, self.stdl = meanl, stdl
+        # self.input = (self.input - meani)/stdi
+        # self.labels = (self.labels - meanl)/stdl
         self.input = torch.from_numpy(self.input).to(dtype=torch.float32)
         self.labels = torch.from_numpy(self.labels).to(dtype=torch.float32)
 

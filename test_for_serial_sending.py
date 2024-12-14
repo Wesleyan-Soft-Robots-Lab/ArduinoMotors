@@ -23,33 +23,36 @@ def dataset_to_numpy(dataloader) -> tuple[np.ndarray, np.ndarray]:
     return np.concatenate(batches), np.concatenate(targets)
 
 batch_size = 1
+
+lookback = 5
+
 model = LSTMRegressor(input_size=4, batch_size=batch_size, num_layers=2,output_size=2)
 model.load_state_dict(
     torch.load(
-        f"Model/model/LSTMRegressor_strap_42.pth", map_location=torch.device("cuda")
+        f"Model/model/LSTMRegressor_strap_norm_{lookback}.pth", map_location=torch.device("cuda")
     )
 )    
 
-model.eval()
 
-
-
-dataset = SerialRNNDataset(lookback=42)
-_, test_loader = prep_dataset(dataset, batch_size, test_size=0.99)
+dataset = SerialRNNDataset(lookback=lookback, file_path=r"C:\Users\softrobotslab\ArduinoMotors\Training_data_angle\angle_data_5.csv")
+_, test_loader = prep_dataset(dataset, batch_size, test_size=0.99, shuffle=False)
 test_array, target_array = dataset_to_numpy(test_loader)
+print(test_array[100], target_array[100])
 test_array = np.expand_dims(test_array, axis=2)
-input = torch.tensor(test_array[0])
 
 model.to(device)
-input = input.to(device)
+model.eval()
 
-with torch.no_grad():
-    prediction = model(input)
+for i in range(len(test_array)-100, len(test_array)):
+    input = torch.tensor(test_array[i])
+    input = input.to(device)
 
-print('prediction:', 90*prediction)
-print('real: ', target_array[0])
+    with torch.no_grad():
+        prediction = model(input)
 
-print('for fun')
+    print(f'{test_array[i][0][0]}\t{90*prediction[-1]}\t{90*target_array[i]}')
+    
+# print('for fun')
 
 
 # # Configure the serial connection
@@ -64,10 +67,19 @@ print('for fun')
 # # Continuously send data
 # try:
 #     while True:
-#         data = "Hello Arduino\n"  # Add newline to match Arduino's readStringUntil
-#         ser.write(data.encode())  # Send data as bytes
-#         print(f"Sent: {data.strip()}")
-#         time.sleep(1)  # Adjust rate of communication
+#         line = ser.readline().decode('utf-8').strip()
+
+#         parts = line.split()
+#         r1, r2, r3 ,r4, a1, a2 = parts[1], parts[2], parts[3], parts[4], \
+#         parts[5], parts[6] 
+#         serialinput = np.array([r1, r2, r3, r4])
+#         serialinput = np.expand_dims(serialinput, axis=2)
+#         with torch.no_grad():
+#             pred = model(serialinput)
+
+#         ser.write(pred.encode())  # Send data as bytes
+#         print(f"Sent: {pred.strip()}")
+#         # time.sleep(1)  # Adjust rate of communication
 # except KeyboardInterrupt:
 #     print("Communication stopped.")
 # finally:

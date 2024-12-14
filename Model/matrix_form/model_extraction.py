@@ -72,7 +72,7 @@ def dataset_to_numpy(dataloader) -> tuple[np.ndarray, np.ndarray]:
 
 
 def write_LSTMRegressor_weights(W_xh, W_hh, b_h, W, b):
-    with open("Model/matrix_form/LSTMRegressorWeights_strap_42.txt", "w") as file:
+    with open("Model/matrix_form/LSTMRegressorWeights_strap_fullnum_30.txt", "w") as file:
         for i in range(W_hh.shape[0]):
             for j in range(W_hh.shape[1]):
                 print(
@@ -124,22 +124,22 @@ def main_comp():
     model = LSTMRegressor(input_size=4, batch_size=batch_size, num_layers=2,output_size=2)
     model.load_state_dict(
         torch.load(
-            f"Model/model/LSTMRegressor_strap_42.pth", map_location=torch.device("cuda")
+            f"Model/model/LSTMRegressor_strap_fullnum_30.pth", map_location=torch.device("cuda")
         )
     )
     dataset = SerialRNNDataset(lookback=20)
     _, test_loader = prep_dataset(dataset, batch_size, test_size=0.99)
     test_array, target_array = dataset_to_numpy(test_loader)
     print(test_array.shape)
-    np.save("Model/matrix_form/test_array1.npy", test_array)
+    np.save("Model/matrix_form/test_array2.npy", test_array)
     np.savetxt(
-        "Model/matrix_form/test_array1.txt",
+        "Model/matrix_form/test_array2.txt",
         test_array.reshape(-1, 2),
         delimiter=",",
         fmt="%.6f",
     )
     np.savetxt(
-        "Model/matrix_form/target_array1.txt",
+        "Model/matrix_form/target_array2.txt",
         target_array,
         delimiter=",",
         fmt="%.6f",
@@ -166,7 +166,7 @@ def main_comp():
     for i in range(len(W_xh)):
         structured_data[f"W_xh_{i}"] = W_xh[i]
 
-    np.save("Model/matrix_form/LSTMRegressor_strap_42.npy", structured_data)
+    np.save("Model/matrix_form/LSTMRegressor_strap_fullnum_30.npy", structured_data)
 
     write_LSTMRegressor_weights(W_xh, W_hh, b_h, W, b)
 

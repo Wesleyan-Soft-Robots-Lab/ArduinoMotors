@@ -5,8 +5,6 @@ import pandas as pd
 import time
 import os
 
-
-
 def process_frame(frame):
     """
     Analyze a frame to detect black dots and calculate their angles relative to the center.
@@ -28,14 +26,16 @@ def process_frame(frame):
     mask = cv2.bitwise_or(mask1, mask2)
     mask = cv2.GaussianBlur(mask, (5,5),0)
     # Separate visual frame to show mask
-    # mask = cv2.imshow("mask", mask)
+    # mask_img = cv2.imshow("mask", mask)
     # Find contours of the black dots
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    
     # Filter contours by size (to exclude noise)
     dot_positions = []
+
     for contour in contours:
-        if cv2.contourArea(contour) > 500:  # Example size threshold
+        
+        #im not exactly sure if 250 is the correct threshold
+        if cv2.contourArea(contour) > 250:  # Example size threshold
             (cx, cy), r = cv2.minEnclosingCircle(contour)
             r = int(r)
             # Determine whether dot is circle
@@ -52,7 +52,7 @@ def process_frame(frame):
     # Calculate the center of the object (assuming it's the geometric center of the dots)
     if len(dot_positions) == 2: # If 2 dots on machine
         (x1, y1), (x2, y2) = dot_positions
-        angle = math.degrees(math.atan2(y1-y2, x1 - x2))
+        angle = 90 - math.degrees(math.atan2(y1-y2, x1 - x2))
         angle = round(angle,2)
         cv2.circle(frame, (x1,y1), 5, (0, 255, 0), -1)
         cv2.circle(frame, (x2,y2), 5, (0, 255, 0), -1)
@@ -66,11 +66,12 @@ def process_frame(frame):
         lower y position than the third (which I believe it should be) --Simon
         '''
         [(x1,y1), (x2,y2), (x3,y3)] = dot_positions
-        # print(dot_positions)
-        angle1 = math.degrees(math.atan2(y1-y2,x1-x2))
+        
+        angle1 = 90 - math.degrees(math.atan2(y1-y2,x1-x2))
         angle1 = round(angle1,2)
-        angle2 = math.degrees(math.atan2(y2-y3,x2-x3))
+        angle2 = 90 - math.degrees(math.atan2(y2-y3,x2-x3))
         angle2 = round(angle2,2)
+        angle1 -= angle2
         cv2.circle(frame, (x1,y1), 5, (0, 255, 0), -1)
         cv2.circle(frame, (x2,y2), 5, (0, 255, 0), -1)
         cv2.circle(frame, (x3,y3), 5, (0, 255, 0), -1)
@@ -82,26 +83,40 @@ def process_frame(frame):
         return frame, (angle1, angle2)
     
     else:
-
         return frame, (None, None)
 
 
 def analyze_pictures(img_folder):
     data = pd.DataFrame(columns=[
+                                   'imgnum',
                                    'Angle1(deg)',
-                                   'Angle2(deg)'])
-    
+                                   'Angle2(deg)'
+                                
+                                ])
+
+
     for filename in os.listdir(img_folder):
         if filename.endswith(('.png', '.jpg', '.jpeg')):
+            [_, index, _] = filename.split("_")
+
             img_path = os.path.join(img_folder, filename)
+            #image uint8 - when shown is grey image- path seems correct
+
+
             image = cv2.imread(img_path)
 
-            _, (a1, a2) = process_frame(image)
+            _,(a1, a2) = process_frame(image)
             new_row = pd.DataFrame({
-                                 'Angle1(deg)': [a1],
-                                 'Angle2(deg)': [a2]})
+                                 "imgnum": [int(index)],
+                                 'Angle1(deg)': [round(a1,2)],
+                                 'Angle2(deg)': [round(a2,2)]})
+            
             data = pd.concat([data, new_row])
+
+    data = data.sort_values(by= "imgnum")
     data.to_csv('angles_output.csv', index=False)
     return 
 
-analyze_pictures(r"C:\Users\softrobotslab\ArduinoMotors\TestData")
+# analyze_pictures(r"C:\Users\softrobotslab\ArduinoMotors\TestData")
+
+analyze_pictures(r"/Users/simon/Desktop/Wesleyan Classes/Soft Robot Lab/ArduinoMotors/TestData")

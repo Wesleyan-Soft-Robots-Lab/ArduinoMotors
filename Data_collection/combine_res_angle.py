@@ -87,6 +87,7 @@ def process_frame(frame):
 
         return frame, (None, None)
 
+# i might be able to get this function to run using the live feed instead of the recording
 def analyze_video(video_path):
     """
     Analyze video frames to detect red dots and calculate angles for each frame.

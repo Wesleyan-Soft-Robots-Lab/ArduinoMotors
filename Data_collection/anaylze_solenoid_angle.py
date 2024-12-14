@@ -120,6 +120,8 @@ def analyze_video(video_path):
         if not ret:
             break
         
+
+        
         # Process each frame
         processed_frame, (angle1,angle2) = process_frame(frame)
         # processed_frame = cv2.resize(processed_frame, (width, height))
@@ -144,7 +146,7 @@ def analyze_video(video_path):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         
-
+    
     cap.release()
     out.release()
     

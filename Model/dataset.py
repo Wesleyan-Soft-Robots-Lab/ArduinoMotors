@@ -95,10 +95,11 @@ class SerialRNNDataset(BaseDatasetforRegression):
         
         self.input = np.array(self.input) # type: ignore
         self.labels = np.array(self.labels) # type: ignore
-        print(type(self.input))
+        # print(type(self.input))
         # print(self.labels)
-        self.input = (self.input - np.mean(self.input, axis=0))
-        self.labels = self.labels / 90 # type: ignore
+        # self.input = (self.input - np.mean(self.input, axis=0))
+        # print(np.mean(self.input, axis=0))
+        # self.labels = self.labels / 90 # type: ignore
         self.input = torch.from_numpy(self.input).to(dtype=torch.float32)
         self.labels = torch.from_numpy(self.labels).to(dtype=torch.float32)
 

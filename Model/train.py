@@ -39,7 +39,7 @@ def prep_dataset(dataset: BaseDataset, batch_size: int, test_size: float=1/3) ->
     train_set, test_set = dataset.split(test_size=test_size)
 
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
-    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
 
     return train_loader, test_loader
 

@@ -8,7 +8,7 @@ def combine_files():
     Combines data of all files into one large csv file for training
     """
 
-    data_path = r'C:\Users\softrobotslab\ArduinoMotors\Training_data_angle'
+    data_path = r'TestData\matched_data'
     # print('hello')
     results = []
     sensor_data = []

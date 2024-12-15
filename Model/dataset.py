@@ -105,13 +105,15 @@ class SerialRNNDataset(BaseDatasetforRegression):
         self.labels = np.array(self.labels) # type: ignore
         # print(type(self.input))
         # print(self.labels)
-        self.input = (self.input - np.mean(self.input, axis=0))
+        self.input = (self.input - self.input[0])/self.input[0]
+
+    
         # print(np.mean(self.input, axis=0))
         self.labels = self.labels / 90 # type: ignore
 
-        meani, stdi = np.mean(self.input, axis=0), np.std(self.input, axis=0)
+        # meani, stdi = np.mean(self.input, axis=0), np.std(self.input, axis=0)
         # self.meani, self.stdi = meani, stdi
-        meanl, stdl = np.mean(self.labels, axis=0), np.std(self.labels, axis=0)
+        # meanl, stdl = np.mean(self.labels, axis=0), np.std(self.labels, axis=0)
         # self.meanl, self.stdl = meanl, stdl
         # self.input = (self.input - meani)/stdi
         # self.labels = (self.labels - meanl)/stdl

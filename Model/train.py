@@ -183,7 +183,7 @@ def test(model: nn.Module, test_loader: DataLoader, title: str, type: str):
             # print('all labels: ',all_labels)
             # print('all pred: ',all_pred)
             r2 = r2_score(all_labels.cpu().numpy(), all_pred.cpu().numpy())
-            print(f"R2 Score on {title} set: {r2}")
+            print(f" R2 Score on {title} set: {r2}")
             return r2
         elif type == "classification":
             accuracy = 100 * corr / total

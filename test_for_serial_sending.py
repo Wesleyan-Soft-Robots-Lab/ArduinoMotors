@@ -24,33 +24,33 @@ def dataset_to_numpy(dataloader) -> tuple[np.ndarray, np.ndarray]:
 
 batch_size = 1
 
-lookback = 5
+lookback = 3
 
 model = LSTMRegressor(input_size=4, batch_size=batch_size, num_layers=2,output_size=2)
 model.load_state_dict(
     torch.load(
-        f"Model/model/LSTMRegressor_strap_norm_{lookback}.pth", map_location=torch.device("cuda")
-    )
+        f"Model/model/LSTMRegressor_strap_norm_{lookback}.pth", map_location=device)
 )    
 
 
-dataset = SerialRNNDataset(lookback=lookback, file_path=r"C:\Users\softrobotslab\ArduinoMotors\Training_data_angle\angle_data_5.csv")
+dataset = SerialRNNDataset(lookback=lookback)
 _, test_loader = prep_dataset(dataset, batch_size, test_size=0.99, shuffle=False)
 test_array, target_array = dataset_to_numpy(test_loader)
-print(test_array[100], target_array[100])
-test_array = np.expand_dims(test_array, axis=2)
+# print(test_array[100], target_array[100])
+# test_array = np.expand_dims(test_array, axis=2)
 
 model.to(device)
 model.eval()
 
 for i in range(len(test_array)-100, len(test_array)):
-    input = torch.tensor(test_array[i])
-    input = input.to(device)
+    # print(f"Test Sample: {test_array[i]}, Target: {target_array[i]}")
+    # print(test_array[i].shape)
+    input = torch.tensor(test_array[i], dtype=torch.float32).unsqueeze(1).to(device) 
 
     with torch.no_grad():
         prediction = model(input)
 
-    print(f'{test_array[i][0][0]}\t{90*prediction[-1]}\t{90*target_array[i]}')
+    print(f'{test_array[i]}\t{90*prediction[-1]}\t{90*target_array[i]}')
     
 # print('for fun')
 

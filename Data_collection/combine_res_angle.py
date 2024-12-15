@@ -4,26 +4,50 @@ import math
 import pandas as pd
 import time
 import os
+from rgb_to_cmyk import rgb_to_cmyk
+import matplotlib.pyplot as plt
 
-def process_frame(frame):
+def get_location(frame):
+    plt.imshow(frame)
+    coords = plt.ginput(1, timeout=100)
+    return int(coords[0][0]), int(coords[0][1])
+
+
+
+
+def process_frame(frame, basex, basey, width):
     """
     Analyze a frame to detect black dots and calculate their angles relative to the center.
     """
     # Convert the frame to grayscale
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    ycc = cv2.cvtColor(frame, cv2.COLOR_RGB2YCR_CB)
+    # ycc = cv2.cvtColor(frame, cv2.COLOR_RGB2YCR_CB)
     
     # Threshold the image to isolate black dots (assume black dots are darker than 50 intensity)
     # thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
     
+
+    
+
     lower_red1 = np.array([0,120,70])
     upper_red1 = np.array([10,255,255])
     lower_red2 = np.array([170,120,70])
     upper_red2 = np.array([180,255,255])
 
     mask1 = cv2.inRange(hsv, lower_red1, upper_red1)
+    for i in range(0, basey + 25):
+        for j in range(0, width-1):
+            mask1[i][j] = 0
+    # # print(mask1)
     mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
-
+    for i in range(0, basey + 30):
+        for j in range(0, width-1):
+            mask2[i][j] = 0
+    # plt.figure()
+    # # ax1.imshow(mask1)
+    # plt.imshow(mask2)
+    # plt.show()
+    # plt.imshow(mask2)
     mask = cv2.bitwise_or(mask1, mask2)
     mask = cv2.GaussianBlur(mask, (5,5),0)
     # Separate visual frame to show mask
@@ -47,7 +71,7 @@ def process_frame(frame):
             if circ >= 0.7 and circ <= 1.3:   
                 dot_positions.append((int(cx),int(cy)))
                 cv2.circle(frame,(int(cx),int(cy)),r,(0,255,255),2)
-
+    dot_positions.append((basex, basey))
     # Separate visual frame to show mask
     # mask_show = cv2.imshow("mask", mask)
     
@@ -97,7 +121,7 @@ def analyze_video(video_path):
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS)
-    output_path = r"C:\Users\softrobotslab\ArduinoMotors\videos\output_angle_8.avi"
+    output_path = r"C:\Users\softrobotslab\ArduinoMotors\videos\output_angle_0.avi"
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter(output_path, fourcc=fourcc, fps=fps, frameSize=(width, height))
     frame_count = 0
@@ -105,20 +129,23 @@ def analyze_video(video_path):
     data = pd.DataFrame(columns = ['Time(s)',
                                    'R1(O)','R2(O)', 'R3(O)', 'R4(O)',
                                    'Angle1(deg)', 'Angle2(deg)'])
-    time_file = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Video_data_new\sensor_data_8.csv"
+    time_file = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Video_data_new\sensor_data_0.csv"
     data_time = pd.read_csv(time_file)
     readings_list = data_time.values.tolist()
     # start_time = time.time()
 
     angles1 = []
     angles2 = []
+    proc_first = True
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
             break
-        
+        if proc_first:
+            (basex,basey) = get_location(frame)
+            proc_first = False
         # Process each frame
-        processed_frame, (angle1,angle2) = process_frame(frame)
+        processed_frame, (angle1,angle2) = process_frame(frame, basex, basey, width)
         # processed_frame = cv2.resize(processed_frame, (width, height))
         out.write(processed_frame)
         # Print the angles for this frame
@@ -160,14 +187,14 @@ def analyze_video(video_path):
         dir_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\Angle_data_new"
         files = os.listdir(dir_path)
         i = len(files)
-        data.to_csv(r'Data_collection\Angle_data_new\angle_data_8.csv', index=False)
+        data.to_csv(r'Data_collection\Angle_data_new\angle_data_0.csv', index=False)
         print(f"Data saved to 'angle_data_{i}.csv'.")
 
     return angles1,angles2, output_path
     # cv2.destroyAllWindows()
 
 # Path for full image:
-path = r"C:\Users\softrobotslab\ArduinoMotors\videos\output_8.avi"
+path = r"C:\Users\softrobotslab\ArduinoMotors\videos\output_0.avi"
 # Path for partial image:
 # path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_12.mp4"
 

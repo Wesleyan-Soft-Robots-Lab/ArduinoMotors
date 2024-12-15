@@ -4,8 +4,15 @@ import math
 import pandas as pd
 import time
 import os
+import matplotlib.pyplot as plt
 
-def process_frame(frame):
+def get_location(frame):
+    plt.imshow(frame)
+    coords = plt.ginput(1, timeout=100)
+    return int(coords[0][0]), int(coords[0][1])
+
+
+def process_frame(frame, basex, basey, width):
     """
     Analyze a frame to detect black dots and calculate their angles relative to the center.
     """
@@ -19,10 +26,15 @@ def process_frame(frame):
     upper_red1 = np.array([10,255,255])
     lower_red2 = np.array([170,120,70])
     upper_red2 = np.array([180,255,255])
-
     mask1 = cv2.inRange(hsv, lower_red1, upper_red1)
+    for i in range(0, basey + 25):
+        for j in range(0, width-1):
+            mask1[i][j] = 0
+    # # print(mask1)
     mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
-
+    for i in range(0, basey + 30):
+        for j in range(0, width-1):
+            mask2[i][j] = 0
     mask = cv2.bitwise_or(mask1, mask2)
     mask = cv2.GaussianBlur(mask, (5,5),0)
     # Separate visual frame to show mask
@@ -48,7 +60,7 @@ def process_frame(frame):
             if circ >= 0.7 and circ <= 1.3:   
                 dot_positions.append((int(cx),int(cy)))
                 cv2.circle(frame,(int(cx),int(cy)),r,(0,255,255),2)
-
+    dot_positions.append((basex, basey))
     # Calculate the center of the object (assuming it's the geometric center of the dots)
     if len(dot_positions) == 2: # If 2 dots on machine
         (x1, y1), (x2, y2) = dot_positions
@@ -95,7 +107,7 @@ def analyze_pictures(img_folder):
                                 
                                 ])
 
-
+    proc_first = True
     for filename in os.listdir(img_folder):
         if filename.endswith(('.png', '.jpg', '.jpeg')):
             [_, index, timestamp_raw] = filename.split("_")
@@ -105,8 +117,11 @@ def analyze_pictures(img_folder):
 
 
             image = cv2.imread(img_path)
-
-            _,(a1, a2) = process_frame(image)
+            _, width, _ = image.shape
+            if proc_first:
+                (basex,basey) = get_location(image)
+                proc_first = False
+            _,(a1, a2) = process_frame(image, basex, basey, width)
             new_row = pd.DataFrame({
                                  "imgnum": [int(index)],
                                  "timestamp": [timestamp],
@@ -116,9 +131,9 @@ def analyze_pictures(img_folder):
             data = pd.concat([data, new_row])
 
     data = data.sort_values(by= "imgnum")
-    data.to_csv('angles_output.csv', index=False)
+    data.to_csv(r'TestData\take6\angles_output.csv', index=False)
     return 
 
 # analyze_pictures(r"C:\Users\softrobotslab\ArduinoMotors\TestData")
 
-analyze_pictures(r"TestData")
+analyze_pictures(r"TestData\take6")

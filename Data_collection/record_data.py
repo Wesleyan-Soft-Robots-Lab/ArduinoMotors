@@ -16,13 +16,13 @@ This script records data from a webcam and a sensor and saves it to a directory.
 ### Initializations
 ###############################
 
-DATA_DIRECTORY = "TestData"
+DATA_DIRECTORY = r"TestData\take6"
 FRAMES_PER_SECOND = 20 # adjust to the frame rate
-DURATION = 40 # adjust to the duration
+DURATION = 45 # adjust to the duration
 WEBCAM_INDEX = 1 # adjust to the webcam index
 VERBOSE = False # adjust to True to print more information
 
-ser = serial.Serial('COM5', 9600)
+ser = serial.Serial('COM7', 9600)
 time.sleep(2)  
 
 cap = cv2.VideoCapture(WEBCAM_INDEX) 
@@ -58,10 +58,10 @@ def sensor_record():
     # Extract values from the line
     parts = line.split()
     timed = time.time()
-    resistance1 = parts[1]
-    resistance2 = parts[2]
-    resistance3 = parts[3]
-    resistance4 = parts[4]
+    resistance1 = parts[2]
+    resistance2 = parts[3]
+    resistance3 = parts[4]
+    resistance4 = parts[5]
 
     # Append to DataFrame
     new_row = pd.DataFrame({'Time(s)': [timed],

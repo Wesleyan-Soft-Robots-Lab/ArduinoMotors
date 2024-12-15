@@ -35,7 +35,7 @@ try:
         parts = line.split()
         # print(parts)
         timed = time.time()-start_time
-        timed = round(timed, 2)
+        timed = round(timed, 1)
         resistance1 = parts[1]
         resistance2 = parts[2]
         resistance3 = parts[3]

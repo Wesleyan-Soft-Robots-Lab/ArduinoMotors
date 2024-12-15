@@ -59,9 +59,8 @@ Everything!
 <h2> How to put together: </h2>
 
 
-<img width="1271" alt="Screenshot 2024-05-16 at 1 38 58 PM" src="https://github.com/Wesleyan-Soft-Robots-Lab/ArduinoMotors/assets/26982745/0a8036aa-f129-4655-9201-5b5f901baa98">
+<img width="1271" alt="Screenshot 2024-05-16 at 1 38 58 PM" src="images/circuit_image.png">
 
-In the image, a DC motor is displayed, but substituting it with an air valve will work seamlessly with the demonstrated connections. (Note: This setup shows the connection for a single air valve. If additional valves are needed, connect them similarly to different Analog and Digital pins, and update the code accordingly to account for these changes.)
 
 
 1. **Arduino Power Supply**:
@@ -96,7 +95,12 @@ In the image, a DC motor is displayed, but substituting it with an air valve wil
 - The Arduino processes this analog reading to set the output signal on digital pin 13. If the signal is high, the air valve opens and closes rapidly; if the signal is low, the opposite happens (refer to the code to understand the detailed logic).
 
 
-Last updated: 5/16/2024 by Kevin Angulo Lezama
+Update Log: 
+
+11/29/2024 by Christian Diaz Herrera
+
+5/16/2024 by Kevin Angulo Lezama
+
 
 
 

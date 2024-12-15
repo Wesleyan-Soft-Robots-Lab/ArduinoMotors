@@ -16,7 +16,7 @@ This script records data from a webcam and a sensor and saves it to a directory.
 ### Initializations
 ###############################
 
-DATA_DIRECTORY = r"TestData\take6"
+DATA_DIRECTORY = r"TestData\take15"
 FRAMES_PER_SECOND = 20 # adjust to the frame rate
 DURATION = 45 # adjust to the duration
 WEBCAM_INDEX = 1 # adjust to the webcam index

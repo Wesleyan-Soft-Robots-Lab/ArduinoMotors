@@ -1,8 +1,8 @@
 import pandas as pd
 import os
 
-sensor_file = r"TestData\take2\sensor_data.csv"
-angle_file = r"TestDAta\take2\angles_output.csv"
+sensor_file = r"TestData\take15\sensor_data.csv"
+angle_file = r"TestDAta\take15\angles_output.csv"
 
 
 def combine_files(sensors, angles):
@@ -14,9 +14,11 @@ def combine_files(sensors, angles):
     angle_dat = pd.read_csv(angles)
     sensor_dat = sensor_dat.values.tolist()
     angle_dat = angle_dat.values.tolist()
+    forget = 3
     for (r, a) in zip(sensor_dat, angle_dat):
         # print(r, a)
-        if r[1] == 'Pl1':
+        if forget > 0:
+            forget -=1
             continue
         new_row = pd.DataFrame({'Time(s)': [r[0]],
                                         'R1(O)': [r[1]], 'R2(O)': [r[2]], 'R3(O)': [r[3]], 'R4(O)': [r[4]],

@@ -53,6 +53,7 @@ def train(
     save_name: str,
     train_type: str,
     show_plot: bool = True,
+    patience: int = 10
 ):
     """
     Trains the given model for the specified number of epochs.
@@ -90,6 +91,8 @@ def train(
     #     if torch.isnan(batch).any():
     #         print('Nan detected in input data')
     #         break
+    best_acc = 0
+    original = patience
     print("Training model...")
     for epoch in trange(num_epoch):
         running_loss = 0.0
@@ -121,6 +124,17 @@ def train(
 
         print(f"\nEpoch {epoch+1} loss: {running_loss/len(train_loader)}")
         all_loss.append(running_loss/len(train_loader))
+        
+        if patience != 0:
+            if test_acc < best_acc:
+                patience -= 1
+            else:
+                best_acc = test_acc
+                patience = original
+        else:
+            print("Implementing early stopping...")
+            break
+
 
     print("\nFinished training, testing model...")
     test(model, test_loader, "test", train_type)
@@ -224,7 +238,7 @@ def train_rig_main():
     model = train(model, 30, train_loader, test_loader, dataset, save_name)
 
 
-def train_serial_main(lookback=3, num_epoch=5000):
+def train_serial_main(lookback=42, num_epoch=5000):
     """
     Trains a model for pose estimation on the serial reading from Arduino.
     """
@@ -233,7 +247,8 @@ def train_serial_main(lookback=3, num_epoch=5000):
     train_loader, test_loader = prep_dataset(dataset, batch_size)
     model, save_name = LSTMRegressor(input_size=4, batch_size=batch_size, num_layers=2, output_size=2), f"LSTMRegressor_strap_norm_{lookback}"
     # model.load_state_dict(torch.load(f"Model/model/{save_name}.pth"))
-    model, all_loss, all_acc = train(model, num_epoch, train_loader, test_loader, dataset, save_name, "regression", show_plot=True)
+    # note: patience was set to 20 with 500 epochs
+    model, all_loss, all_acc = train(model, num_epoch, train_loader, test_loader, dataset, save_name, "regression", show_plot=True, patience=50)
 
     return lookback, all_loss, all_acc
 
@@ -249,4 +264,4 @@ if __name__ == "__main__":
     #         acc[i] = result[2][-1]
 
 
-    train_serial_main(num_epoch=300)
+    train_serial_main(num_epoch=5000)

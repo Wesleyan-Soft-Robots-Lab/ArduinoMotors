@@ -24,7 +24,7 @@ def dataset_to_numpy(dataloader) -> tuple[np.ndarray, np.ndarray]:
 
 batch_size = 1
 
-lookback = 3
+lookback = 42
 
 model = LSTMRegressor(input_size=4, batch_size=batch_size, num_layers=2,output_size=2)
 model.load_state_dict(

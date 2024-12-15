@@ -115,6 +115,7 @@ void update_sensors() {
       Sensors[i].voltage_sum -= Sensors[i].voltage_window[0];
       Sensors[i].voltage_window.removeFirst();
       Sensors[i].resistance = calc_resistance(Sensors[i].voltage_sum / MAX_WINDOW_SIZE, Sensors[i].resistor_known);
+      // Sensors[i].resistance = voltage;
     }
   }
 }

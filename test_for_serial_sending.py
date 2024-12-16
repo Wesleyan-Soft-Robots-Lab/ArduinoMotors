@@ -29,7 +29,7 @@ lookback = 42
 model = LSTMRegressor(input_size=4, batch_size=batch_size, num_layers=2,output_size=2)
 model.load_state_dict(
     torch.load(
-        f"Model/model/LSTMRegressor_strap_norm_{lookback}.pth", map_location=device)
+        f"Model/model/LSTMRegressor_strap_norm_{lookback}.pth", map_location=device, weights_only=True)
 )    
 
 
@@ -45,12 +45,13 @@ model.eval()
 for i in range(len(test_array)-100, len(test_array)):
     # print(f"Test Sample: {test_array[i]}, Target: {target_array[i]}")
     # print(test_array[i].shape)
-    input = torch.tensor(test_array[i], dtype=torch.float32).unsqueeze(1).to(device) 
+    input = torch.tensor(test_array[i], dtype=torch.float32).unsqueeze(0).to(device) 
 
     with torch.no_grad():
         prediction = model(input)
+        output = prediction.cpu().numpy()
 
-    print(f'{test_array[i]}\t{90*prediction[-1]}\t{90*target_array[i]}')
+    print(f'{90*prediction[-1]}\t{90*target_array[i]}')
     
 # print('for fun')
 

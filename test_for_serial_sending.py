@@ -138,9 +138,9 @@ def arduino_predictions():
 
 
 if __name__ == "__main__":
-    # arduino_predictions()
+    arduino_predictions()
     """This is the old testing code, thought it would be good to keep here for reference"""
-    print(input_init.shape)
+    # print(input_init.shape)
     # dataset = SerialRNNDataset(lookback=LOOKBACK)
     # _, test_loader = prep_dataset(dataset, batch_size, test_size=0.99, shuffle=False)
 # test_array, target_array = dataset_to_numpy(test_loader)

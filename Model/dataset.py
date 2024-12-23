@@ -105,7 +105,10 @@ class SerialRNNDataset(BaseDatasetforRegression):
         self.labels = np.array(self.labels) # type: ignore
         # print(type(self.input))
         # print(self.labels)
+        # print(self.input[0])
+        # print(self.input[0].shape)
         self.input = (self.input - self.input[0])/self.input[0]
+
 
     
         # print(np.mean(self.input, axis=0))

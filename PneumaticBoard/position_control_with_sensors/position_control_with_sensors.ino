@@ -18,15 +18,25 @@ const int MAX_WINDOW_SIZE = 15;         // the size of the moving window of volt
 const int voltage_in = 5;               // 5V voltage_in
 const float sensor_to_5V = 5.0 / 1023;  //scalar to scale analogRead output to 0 to 5V scale
 
-int POTpin1 = A5; //The following two pins are for reading the potentiometer readings to control arm for now
-int POTpin2 = A6;
+//int POTpin1 = A5; //The following two pins are for reading the potentiometer readings to control arm for now
+//int POTpin2 = A6;
 int solenoidPin1 = 2; //The following 4 pins are for the power of which we control the solenoids
 int solenoidPin2 = 3;
 int solenoidPin3 = 4;
 int solenoidPin4 = 5;
 
-int POTval1, mapval1, percent1; //These values will be converted to percentages and mapped to the right values for controlling solenoids
-int POTval2, mapval2, percent2;
+int solenoid_command1 = 1023/2;
+int solenoid_command2 = 1023/2;
+
+float position_error1;
+float sensed_position1;
+float desired_position1;
+float position_error2;
+float sensed_position1;
+float desired_position2;
+
+float p_gain = 3.0;
+float d_gain = 0.02;
 
 typedef struct Sensor {
   /*
@@ -149,52 +159,38 @@ void calibrate_devices() {
 void setup() {
   Serial.begin(9600);
   Sensor_Init();
+  analogWrite(solenoidPin1, solenoid_command1);
+  analogWrite(solenoidPin2, solenoid_command2);
+  analogWrite(solenoidPin3, solenoid_command3);
+  analogWrite(solenoidPin4, solenoid_command4);
 }
 
 /*=============================================================   Loop   ====================================================================*/
 
 void loop() {
 
-  /* Get sensor readings and print them */
+  /* Get sensor readings */
   update_sensors();
-  Serial.print("Resistance: ");
-  Serial.print(debug());
 
-  /* Desired position */
-  // POTval1 = analogRead(POTpin1);
-  // mapval1 = map(POTval1, 0, 1023, 0,255);
-  // percent1 = map(POTval1, 0, 1023, 0,100);
-  // POTval2 = analogRead(POTpin2);
-  // mapval2 = map(POTval2, 0, 1023, 0, 255);
-  // percent2 = map(POTval2, 0,1023, 0,100);
+  /* Turn sensor readings into position readings using LSTM model on computer */
   while (!Serial.available() == 0) {
-
+    
   }
   String response = Serial.readStringUntil('\n');
+  Serial.print(sprintf("output: %s\n"), response);
 
-  /* */
-  Serial.print("\tPotval1: ");
-  Serial.print(POTval1);
-  // Serial.println();
-  Serial.print("\tmapval1 ");
-  Serial.print(mapval1);
-  Serial.print("\tPercentage: ");
-  Serial.print(percent1);
-  // Serial.println();
-  Serial.print("\tPotval2: " );
-  Serial.print(POTval2);
-  // Serial.println();
-  Serial.print("\tmapval2: ");
-  Serial.print(mapval2);
-  Serial.print("\tPercentage: ");
-  Serial.print(percent2);
-  Serial.println();
+  /* Calculate position error and desired position */
+
+  position_error1 = sensed_position1 - desired_position1;
+  position_error2 = sensed_position1 - desired_position2;
+
+  solenoid_command1 = solenoid_command1 + position_error1*p_gain;
+  solenoid_command2 = solenoid_command2 + position_error2*p_gain;
 
   /* Write to the solenoids */
-  analogWrite(solenoidPin1, mapval1);
-  // delay(100);
-  analogWrite(solenoidPin2, mapval1);
-  analogWrite(solenoidPin3, mapval2);
-  analogWrite(solenoidPin4, mapval2);
+  analogWrite(solenoidPin1, solenoid_command1);
+  analogWrite(solenoidPin2, solenoid_command2);
+  analogWrite(solenoidPin3, solenoid_command3);
+  analogWrite(solenoidPin4, solenoid_command4);
 }
 

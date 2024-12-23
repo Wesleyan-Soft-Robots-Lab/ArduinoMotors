@@ -187,7 +187,7 @@ void setup() {
   analogWrite(solenoidPin3, solenoid_command2);
   analogWrite(solenoidPin4, solenoid_command2);
 
-  for(int i = 0; i < 42; i = i + 1) {
+  for(int i = 0; i < 41; i = i + 1) {
     /* Get sensor readings */
     update_sensors();
 

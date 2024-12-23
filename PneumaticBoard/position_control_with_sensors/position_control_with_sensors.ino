@@ -32,8 +32,16 @@ float position_error1;
 float sensed_position1;
 float desired_position1;
 float position_error2;
-float sensed_position1;
+float sensed_position2;
 float desired_position2;
+
+float last_position1;
+float last_position2;
+
+float d_position1;
+float d_position2;
+
+int minimum_solenoid_value = 10;
 
 float p_gain = 3.0;
 float d_gain = 0.02;
@@ -163,31 +171,92 @@ void setup() {
   analogWrite(solenoidPin2, solenoid_command1);
   analogWrite(solenoidPin3, solenoid_command2);
   analogWrite(solenoidPin4, solenoid_command2);
+
+  for(int i = 0; i < 50; i = i + 1) {
+    /* Get sensor readings */
+    update_sensors();
+
+    /* Send sensor readings to the Python script running on the computer */
+    Serial.print("Sensor1: ");
+    Serial.print(analogRead(S0));
+    Serial.print("\tSensor2: ");
+    Serial.print(analogRead(S1));
+    Serial.print("\tSensor3: ");
+    Serial.print(analogRead(S2));
+    Serial.print("\tSensor4: ");
+    Serial.print(analogRead(S3));
+  }
 }
 
 /*=============================================================   Loop   ====================================================================*/
 
 void loop() {
 
+  last_position1 = sensed_position1;
+  last_position2 = sensed_position2;
+
+  last_millis = current_millis;
+  current_millis = millis()/1000.0;
+
+  dt = current_millis-last_millis;
+
   /* Get sensor readings */
   update_sensors();
+
+  /* Send sensor readings to the Python script running on the computer */
+  Serial.print("Sensor1: ");
+  Serial.print(analogRead(S0));
+  Serial.print("\tSensor2: ");
+  Serial.print(analogRead(S1));
+  Serial.print("\tSensor3: ");
+  Serial.print(analogRead(S2));
+  Serial.print("\tSensor4: ");
+  Serial.print(analogRead(S3));
 
   /* Turn sensor readings into position readings using LSTM model on computer */
   while (!Serial.available() == 0) {
     
   }
   String response = Serial.readStringUntil('\n');
-  Serial.print(sprintf("output: %s\n"), response);
-
+  
   /* Calculate position error and desired position */
-
   position_error1 = sensed_position1 - desired_position1;
-  position_error2 = sensed_position1 - desired_position2;
+  position_error2 = sensed_position2 - desired_position2;
 
+  /* Calculate error of derivative of position */
+  d_position1 = (sensed_position1 - last_position1)/dt;
+  d_position2 = (sensed_position2 - last_position2)/dt;
+
+  // Note: We always want derivative 0 (for this application) so d_position is the same as the error
+
+  /* Calculate new command to send to solenoids */
   solenoid_command1 = solenoid_command1 + (int)position_error1*p_gain;
   solenoid_command2 = solenoid_command2 + (int)position_error2*p_gain;
 
-  /* Write to the solenoids */
+  // Uncomment this if you want to use the derivative gain
+  /* 
+  solenoid_command1 = solenoid_command1 + (int)(position_error1*p_gain + d_position1*d_gain);
+  solenoid_command2 = solenoid_command2 + (int)(position_error2*p_gain + d_position2*d_gain);
+  */
+
+  /* Condition the solenoid commands -- keep them within the range [minimum_solenoid_value, 255] */
+  if (solenoid_command1 < minimum_solenoid_value) {
+    solenoid_command1 = minimum_solenoid_value;
+  }
+  
+  if (solenoid_command2 < minimum_solenoid_value) {
+    solenoid_command2 = minimum_solenoid_value;
+  }
+
+  if (solenoid_command1 > 255) {
+    solenoid_command1 = 255;
+  }
+
+  if (solenoid_command2 > 255) {
+    solenoid_command2 = 255;
+  }
+
+  /* Write our new commands to the solenoids! */
   analogWrite(solenoidPin1, solenoid_command1);
   analogWrite(solenoidPin2, solenoid_command1);
   analogWrite(solenoidPin3, solenoid_command2);

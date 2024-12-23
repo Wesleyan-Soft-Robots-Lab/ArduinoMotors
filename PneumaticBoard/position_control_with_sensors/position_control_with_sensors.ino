@@ -160,9 +160,9 @@ void setup() {
   Serial.begin(9600);
   Sensor_Init();
   analogWrite(solenoidPin1, solenoid_command1);
-  analogWrite(solenoidPin2, solenoid_command2);
-  analogWrite(solenoidPin3, solenoid_command3);
-  analogWrite(solenoidPin4, solenoid_command4);
+  analogWrite(solenoidPin2, solenoid_command1);
+  analogWrite(solenoidPin3, solenoid_command2);
+  analogWrite(solenoidPin4, solenoid_command2);
 }
 
 /*=============================================================   Loop   ====================================================================*/

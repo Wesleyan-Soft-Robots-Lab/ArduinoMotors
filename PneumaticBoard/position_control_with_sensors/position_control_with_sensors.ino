@@ -25,8 +25,8 @@ int solenoidPin2 = 3;
 int solenoidPin3 = 4;
 int solenoidPin4 = 5;
 
-int solenoid_command1 = 1023/2;
-int solenoid_command2 = 1023/2;
+int solenoid_command1 = 255/2;
+int solenoid_command2 = 255/2;
 
 float position_error1;
 float sensed_position1;

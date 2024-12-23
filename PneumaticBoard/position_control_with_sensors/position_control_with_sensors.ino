@@ -192,14 +192,7 @@ void setup() {
     update_sensors();
 
     /* Send sensor readings to the Python script running on the computer */
-    Serial.print("Sensor1: ");
-    Serial.print(analogRead(S0));
-    Serial.print("\tSensor2: ");
-    Serial.print(analogRead(S1));
-    Serial.print("\tSensor3: ");
-    Serial.print(analogRead(S2));
-    Serial.print("\tSensor4: ");
-    Serial.print(analogRead(S3));
+    Serial.print(debug());
 
   }
 
@@ -231,14 +224,7 @@ void loop() {
   update_sensors();
 
   /* Send sensor readings to the Python script running on the computer */
-  Serial.print("Sensor1: ");
-  Serial.print(analogRead(S0));
-  Serial.print("\tSensor2: ");
-  Serial.print(analogRead(S1));
-  Serial.print("\tSensor3: ");
-  Serial.print(analogRead(S2));
-  Serial.print("\tSensor4: ");
-  Serial.print(analogRead(S3));
+  Serial.print(debug());
 
   /* Turn sensor readings into position readings using LSTM model on computer */
   while (!Serial.available() == 0) {

@@ -184,8 +184,8 @@ void loop() {
   position_error1 = sensed_position1 - desired_position1;
   position_error2 = sensed_position1 - desired_position2;
 
-  solenoid_command1 = solenoid_command1 + position_error1*p_gain;
-  solenoid_command2 = solenoid_command2 + position_error2*p_gain;
+  solenoid_command1 = solenoid_command1 + (int)position_error1*p_gain;
+  solenoid_command2 = solenoid_command2 + (int)position_error2*p_gain;
 
   /* Write to the solenoids */
   analogWrite(solenoidPin1, solenoid_command1);

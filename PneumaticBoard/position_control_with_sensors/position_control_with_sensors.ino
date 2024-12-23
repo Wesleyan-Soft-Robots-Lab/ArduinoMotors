@@ -160,7 +160,7 @@ void loop() {
   Serial.print("Resistance: ");
   Serial.print(debug());
 
-  /* Desired position */
+  /* Calculate desired position */
   POTval1 = analogRead(POTpin1);
   mapval1 = map(POTval1, 0, 1023, 0,255);
   percent1 = map(POTval1, 0, 1023, 0,100);

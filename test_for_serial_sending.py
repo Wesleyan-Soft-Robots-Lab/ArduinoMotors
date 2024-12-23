@@ -101,29 +101,36 @@ def arduino_predictions():
         print('Connection to Arduino established. Waiting for data...')
         lookback_copy = LOOKBACK
         serialinput = [], #input filled with values that match our lookback value
+        first = True
         while True:
                 try:
                     if ser.in_waiting > 0:
-                        while lookback_copy != 0: #we fill input until we have enough values for the model
+                        if first:
+                            first = False
+                            continue
+                        elif lookback_copy > 1: #we fill input until we have enough values for the model
                             line = ser.readline().decode('utf-8').strip()
                             parts = line.split()
                             r1, r2, r3 ,r4 = parts[1], parts[2], parts[3], parts[4]
                             reading = np.array([r1, r2, r3, r4])
-                            # print(reading)
                             serialinput = np.append(serialinput, [np.array(reading)], axis=0)
                             lookback_copy -= 1
                             continue
+                        elif serialinput.shape[0] != LOOKBACK:
+                            line = ser.readline().decode('utf-8').strip()
+                            parts = line.split()
+                            r1, r2, r3 ,r4 = parts[1], parts[2], parts[3], parts[4]
+                            reading = np.array([r1, r2, r3, r4])
+                            serialinput = np.append(serialinput, [np.array(reading)], axis=0)
                         serialinput = (serialinput - input_init)/input_init
-                        # print(serialinput)
-                        lookback_copy = LOOKBACK
-                        serialinput = [] #reset our lookback and input for the next input
                         serialinput = torch.tensor(serialinput, dtype=torch.float32).unsqueeze(0).to(device)
                         with torch.no_grad():
                             pred = lstm_model(serialinput)
-
-                        ser.write(pred.encode())  # Send data as bytes
-                        print(f"Sent: {pred.strip()}")
+                        ser.write(f"{pred}\n".encode())  # Send data as bytes
+                        # print(f"Sent: {pred.strip()}")
+                        serialinput = serialinput[1:]
                     time.sleep(0.1) #for minimal data congestion
+
                 except ValueError:
                     print("Value error: invalid data received.")
                 except UnicodeDecodeError:

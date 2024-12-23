@@ -161,12 +161,16 @@ void loop() {
   Serial.print(debug());
 
   /* Desired position */
-  POTval1 = analogRead(POTpin1);
-  mapval1 = map(POTval1, 0, 1023, 0,255);
-  percent1 = map(POTval1, 0, 1023, 0,100);
-  POTval2 = analogRead(POTpin2);
-  mapval2 = map(POTval2, 0, 1023, 0, 255);
-  percent2 = map(POTval2, 0,1023, 0,100);
+  // POTval1 = analogRead(POTpin1);
+  // mapval1 = map(POTval1, 0, 1023, 0,255);
+  // percent1 = map(POTval1, 0, 1023, 0,100);
+  // POTval2 = analogRead(POTpin2);
+  // mapval2 = map(POTval2, 0, 1023, 0, 255);
+  // percent2 = map(POTval2, 0,1023, 0,100);
+  while (!Serial.available() == 0) {
+
+  }
+  String response = Serial.readStringUntil('\n');
 
   /* */
   Serial.print("\tPotval1: ");

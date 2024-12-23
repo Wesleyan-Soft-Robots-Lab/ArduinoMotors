@@ -24,6 +24,11 @@ int solenoidPin1 = 2; //The following 4 pins are for the power of which we contr
 int solenoidPin2 = 3;
 int solenoidPin3 = 4;
 int solenoidPin4 = 5;
+int S0 = A0;
+int S1 = A1;
+int S2 = A2;
+int S3 = A3;
+
 
 int solenoid_command1 = 255/2;
 int solenoid_command2 = 255/2;
@@ -40,6 +45,11 @@ float last_position2;
 
 float d_position1;
 float d_position2;
+
+float dt;
+
+unsigned long last_millis;
+unsigned long current_millis;
 
 int minimum_solenoid_value = 10;
 
@@ -151,6 +161,11 @@ String debug(){
   return debug_string;
 }
 
+/* Take in a string in format [2.343, 16.024392] and return the position as a float */
+float get_sensed_position(String response, int which_position) {
+  return 1.0;
+}
+
 /*=============================================================   Initialization  ========================================================*/
 
 void calibrate_sensors() {
@@ -172,7 +187,7 @@ void setup() {
   analogWrite(solenoidPin3, solenoid_command2);
   analogWrite(solenoidPin4, solenoid_command2);
 
-  for(int i = 0; i < 50; i = i + 1) {
+  for(int i = 0; i < 42; i = i + 1) {
     /* Get sensor readings */
     update_sensors();
 
@@ -185,7 +200,19 @@ void setup() {
     Serial.print(analogRead(S2));
     Serial.print("\tSensor4: ");
     Serial.print(analogRead(S3));
+
   }
+
+  /* Turn sensor readings into position readings using LSTM model on computer */
+  while (!Serial.available() == 0) {
+    
+  }
+  String response = Serial.readStringUntil('\n');
+  
+  /* We will determine sensed_position1 and sensed_position2 from response with a function */
+  sensed_position1 = get_sensed_position(response, 1);
+  sensed_position2 = get_sensed_position(response, 2);
+
 }
 
 /*=============================================================   Loop   ====================================================================*/
@@ -196,9 +223,9 @@ void loop() {
   last_position2 = sensed_position2;
 
   last_millis = current_millis;
-  current_millis = millis()/1000.0;
+  current_millis = millis();
 
-  dt = current_millis-last_millis;
+  dt = float((current_millis - last_millis)/1000);
 
   /* Get sensor readings */
   update_sensors();
@@ -218,22 +245,24 @@ void loop() {
     
   }
   String response = Serial.readStringUntil('\n');
+
+  sensed_position1 = get_sensed_position(response, 1);
+  sensed_position2 = get_sensed_position(response, 2);
   
   /* Calculate position error and desired position */
   position_error1 = sensed_position1 - desired_position1;
   position_error2 = sensed_position2 - desired_position2;
 
-  /* Calculate error of derivative of position */
+  /* Calculate error of derivative of position.
+     Note: We always want derivative 0 (for this application) so d_position is the same as the error */
   d_position1 = (sensed_position1 - last_position1)/dt;
   d_position2 = (sensed_position2 - last_position2)/dt;
-
-  // Note: We always want derivative 0 (for this application) so d_position is the same as the error
 
   /* Calculate new command to send to solenoids */
   solenoid_command1 = solenoid_command1 + (int)position_error1*p_gain;
   solenoid_command2 = solenoid_command2 + (int)position_error2*p_gain;
 
-  // Uncomment this if you want to use the derivative gain
+  // Uncomment this and comment out the last two lines if you want to use the derivative gain
   /* 
   solenoid_command1 = solenoid_command1 + (int)(position_error1*p_gain + d_position1*d_gain);
   solenoid_command2 = solenoid_command2 + (int)(position_error2*p_gain + d_position2*d_gain);

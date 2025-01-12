@@ -30,21 +30,21 @@ int S2 = A2;
 int S3 = A3;
 
 
+int solenoid_command0 = 255/2;
 int solenoid_command1 = 255/2;
-int solenoid_command2 = 255/2;
 
+float position_error0;
+float sensed_position0;
+float desired_position0 = 20.0;
 float position_error1;
 float sensed_position1;
-float desired_position1;
-float position_error2;
-float sensed_position2;
-float desired_position2;
+float desired_position1 = 27.0;
 
+float last_position0;
 float last_position1;
-float last_position2;
 
+float d_position0;
 float d_position1;
-float d_position2;
 
 float dt;
 
@@ -163,8 +163,28 @@ String debug(){
 
 /* Take in a string in format [2.343, 16.024392] and return the position as a float */
 float get_sensed_position(String response, int which_position) {
-  return 1.0;
+  char input[response.length() + 1];
+  response.toCharArray(input, sizeof(input));
+  float values[2];
+  char *bracketStart = strchr(input, '[');
+  char *bracketEnd = strchr(input, ']');
+  if (bracketStart && bracketEnd) {
+    *bracketEnd = '\0';
+    bracketStart = bracketStart + 1;
+  } else {
+    return ;
+  }
+
+  char *token = strtok(bracketStart, " ");
+  int index = 0;
+  while (token != NULL && index < 2) {
+    values[index++] = atof(token);
+    token = strtok(NULL, " ");
+  }
+  
+  return values[which_position];
 }
+
 
 /*=============================================================   Initialization  ========================================================*/
 
@@ -182,11 +202,13 @@ void calibrate_devices() {
 void setup() {
   Serial.begin(9600);
   Sensor_Init();
-  analogWrite(solenoidPin1, solenoid_command1);
-  analogWrite(solenoidPin2, solenoid_command1);
-  analogWrite(solenoidPin3, solenoid_command2);
-  analogWrite(solenoidPin4, solenoid_command2);
+  analogWrite(solenoidPin1, solenoid_command0);
+  analogWrite(solenoidPin2, solenoid_command0);
+  analogWrite(solenoidPin3, solenoid_command1);
+  analogWrite(solenoidPin4, solenoid_command1);
 
+  // delay(10000);
+  
   for(int i = 0; i < 41; i = i + 1) {
     /* Get sensor readings */
     update_sensors();
@@ -202,9 +224,9 @@ void setup() {
   }
   String response = Serial.readStringUntil('\n');
   
-  /* We will determine sensed_position1 and sensed_position2 from response with a function */
+  /* We will determine sensed_position0 and sensed_position0 from response with a function */
+  sensed_position0 = get_sensed_position(response, 0);
   sensed_position1 = get_sensed_position(response, 1);
-  sensed_position2 = get_sensed_position(response, 2);
 
 }
 
@@ -212,8 +234,8 @@ void setup() {
 
 void loop() {
 
+  last_position0 = sensed_position0;
   last_position1 = sensed_position1;
-  last_position2 = sensed_position2;
 
   last_millis = current_millis;
   current_millis = millis();
@@ -232,49 +254,49 @@ void loop() {
   }
   String response = Serial.readStringUntil('\n');
 
+  sensed_position0 = get_sensed_position(response, 0);
   sensed_position1 = get_sensed_position(response, 1);
-  sensed_position2 = get_sensed_position(response, 2);
   
   /* Calculate position error and desired position */
+  position_error0 = sensed_position0 - desired_position0;
   position_error1 = sensed_position1 - desired_position1;
-  position_error2 = sensed_position2 - desired_position2;
 
   /* Calculate error of derivative of position.
      Note: We always want derivative 0 (for this application) so d_position is the same as the error */
+  d_position0 = (sensed_position0 - last_position0)/dt;
   d_position1 = (sensed_position1 - last_position1)/dt;
-  d_position2 = (sensed_position2 - last_position2)/dt;
 
   /* Calculate new command to send to solenoids */
-  solenoid_command1 = solenoid_command1 + (int)position_error1*p_gain;
-  solenoid_command2 = solenoid_command2 + (int)position_error2*p_gain;
+  solenoid_command0 = solenoid_command0 - (int)position_error0*p_gain;
+  solenoid_command1 = solenoid_command1 - (int)position_error1*p_gain;
 
   // Uncomment this and comment out the last two lines if you want to use the derivative gain
   /* 
+  solenoid_command0 = solenoid_command0 + (int)(position_error0*p_gain + d_position0*d_gain);
   solenoid_command1 = solenoid_command1 + (int)(position_error1*p_gain + d_position1*d_gain);
-  solenoid_command2 = solenoid_command2 + (int)(position_error2*p_gain + d_position2*d_gain);
   */
 
   /* Condition the solenoid commands -- keep them within the range [minimum_solenoid_value, 255] */
+  if (solenoid_command0 < minimum_solenoid_value) {
+    solenoid_command0 = minimum_solenoid_value;
+  }
+  
   if (solenoid_command1 < minimum_solenoid_value) {
     solenoid_command1 = minimum_solenoid_value;
   }
-  
-  if (solenoid_command2 < minimum_solenoid_value) {
-    solenoid_command2 = minimum_solenoid_value;
+
+  if (solenoid_command0 > 255) {
+    solenoid_command0 = 255;
   }
 
   if (solenoid_command1 > 255) {
     solenoid_command1 = 255;
   }
 
-  if (solenoid_command2 > 255) {
-    solenoid_command2 = 255;
-  }
-
   /* Write our new commands to the solenoids! */
-  analogWrite(solenoidPin1, solenoid_command1);
-  analogWrite(solenoidPin2, solenoid_command1);
-  analogWrite(solenoidPin3, solenoid_command2);
-  analogWrite(solenoidPin4, solenoid_command2);
+  analogWrite(solenoidPin1, solenoid_command0);
+  analogWrite(solenoidPin2, solenoid_command0);
+  analogWrite(solenoidPin3, solenoid_command1);
+  analogWrite(solenoidPin4, solenoid_command1);
 }
 

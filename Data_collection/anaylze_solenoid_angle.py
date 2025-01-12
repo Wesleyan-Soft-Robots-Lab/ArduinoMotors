@@ -104,7 +104,7 @@ def analyze_video(video_path):
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS)
     print(fps)
-    output_path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output_angle.avi"
+    output_path = r"C:\Users\softrobotslab\ArduinoMotors\videos\first_success_ground_truth.avi"
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter(output_path, fourcc=fourcc, fps=fps, frameSize=(width, height))
 
@@ -164,7 +164,7 @@ def analyze_video(video_path):
     # cv2.destroyAllWindows()
 
 # Path for full image:
-path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\output.avi"
+path = r"C:\Users\softrobotslab\ArduinoMotors\videos\first_success.mp4"
 # Path for partial image:
 # path = r"C:\Users\softrobotslab\ArduinoMotors\Data_collection\data_12.mp4"
 angles1,angles2,output_path =  analyze_video(path)

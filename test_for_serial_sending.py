@@ -14,48 +14,48 @@ returning the prediction set by our model for pose estimation"""
 
 LOOKBACK = 42 #preset the lookback value used to train our LSTM
 batch_size = 1 #We will be predicting one batch at a time
-input_init = np.array([[96.3,  92.63, 99.11, 99.51],
-                        [96.3,  92.63, 99.11, 99.51],
-                        [96.3,  92.61, 99.11, 99.51],
-                        [96.3,  92.61, 99.11, 99.51],
-                        [96.3,  92.59, 99.11, 99.51],
-                        [96.3,  92.56, 99.11, 99.51],
-                        [96.3,  92.54, 99.11, 99.51],
-                        [96.3,  92.51, 99.11, 99.51],
-                        [96.3,  92.51, 99.11, 99.51],
-                        [96.3,  92.51, 99.11, 99.51],
-                        [96.3,  92.51, 99.11, 99.51],
-                        [96.3,  92.49, 99.11, 99.51],
-                        [96.3,  92.46, 99.11, 99.51],
-                        [96.3,  92.44, 99.11, 99.53],
-                        [96.3,  92.44, 99.11, 99.53],
-                        [96.3,  92.44, 99.11, 99.53],
-                        [96.3,  92.42, 99.11, 99.53],
-                        [96.33, 92.42, 99.11, 99.53],
-                        [96.33, 92.39, 99.11, 99.53],
-                        [96.33, 92.39, 99.11, 99.51],
-                        [96.33, 92.39, 99.11, 99.51],
-                        [96.33, 92.39, 99.11, 99.51],
-                        [96.33, 92.39, 99.11, 99.51],
-                        [96.33, 92.39, 99.11, 99.51],
-                        [96.33, 92.39, 99.11, 99.51],
-                        [96.33, 92.37, 99.11, 99.48],
-                        [96.33, 92.37, 99.11, 99.48],
-                        [96.33, 92.37, 99.11, 99.48],
-                        [96.33, 92.37, 99.11, 99.48],
-                        [96.35, 92.37, 99.11, 99.48],
-                        [96.35, 92.37, 99.11, 99.48],
-                        [96.35, 92.37, 99.11, 99.48],
-                        [96.33, 92.37, 99.11, 99.48],
-                        [96.33, 92.34, 99.11, 99.48],
-                        [96.33, 92.34, 99.11, 99.48],
-                        [96.35, 92.34, 99.11, 99.48],
-                        [96.35, 92.32, 99.11, 99.48],
-                        [96.35, 92.32, 99.11, 99.48],
-                        [96.35, 92.3,  99.11, 99.48],
-                        [96.35, 92.3,  99.11, 99.48],
-                        [96.35, 92.3,  99.11, 99.51],
-                        [96.38, 92.3,  99.11, 99.51]])
+input_init = np.array([[ 95.25, 89.45, 102.54, 98.7 ],
+ [ 95.21, 89.34, 102.48, 98.68],
+ [ 95.18, 89.22, 102.46, 98.65],
+ [ 95.13, 89.13, 102.46, 98.63],
+ [ 95.08, 88.99, 102.46, 98.6 ],
+ [ 95.03, 88.9, 102.43, 98.55],
+ [ 95.01, 88.8, 102.48, 98.5 ],
+ [ 94.96, 88.71, 102.46, 98.47],
+ [ 94.91, 88.59, 102.48, 98.45],
+ [ 94.88, 88.53, 102.43, 98.4 ],
+ [ 94.83, 88.43, 102.38, 98.34],
+ [ 94.78, 88.3, 102.35, 98.32],
+ [ 94.76, 88.18, 102.32, 98.27],
+ [ 94.71, 88.09, 102.24, 98.19],
+ [ 94.64, 88.,  102.19, 98.16],
+ [ 94.66, 87.95, 102.24, 98.19],
+ [ 94.69, 88.02, 102.27, 98.16],
+ [ 94.66, 88.04, 102.24, 98.14],
+ [ 94.66, 88.02, 102.19, 98.14],
+ [ 94.69, 88.07, 102.11, 98.11],
+ [ 94.66, 88.07, 102.08, 98.11],
+ [ 94.64, 88.04, 102.08, 98.14],
+ [ 94.66, 88.04, 102.14, 98.11],
+ [ 94.68, 88.07, 102.08, 98.09],
+ [ 94.66, 88.04, 102.08, 98.11],
+ [ 94.66, 88.02, 102.14, 98.14],
+ [ 94.68, 88.09, 102.16, 98.11],
+ [ 94.64, 88.09, 102.19, 98.11],
+ [ 94.64, 88.04, 102.35, 98.16],
+ [ 94.68, 88.04, 102.38, 98.14],
+ [ 94.66, 88.04, 102.46, 98.09],
+ [ 94.64, 88.02, 102.59, 98.11],
+ [ 94.66, 88.02, 102.62, 98.14],
+ [ 94.68, 88.07, 102.7,  98.11],
+ [ 94.66, 88.07, 102.59, 98.11],
+ [ 94.66, 88.04, 102.67, 98.14],
+ [ 94.66, 88.04, 102.59, 98.14],
+ [ 94.61, 88.04, 102.51, 98.14],
+ [ 94.61, 88.04, 102.48, 98.14],
+ [ 94.64, 88.04, 102.56, 98.11],
+ [ 94.64, 88.04, 102.59, 98.11],
+ [ 94.61, 88.02, 102.59, 98.11]])
 
 #Check if gpu usage is available, else utilize cpu
 if torch.cuda.is_available():
@@ -89,7 +89,7 @@ def prepare_model():
 
 def arduino_predictions():
     # Configure the serial connection
-    arduino_port = "COM3"  # Replace with your Arduino's COM port
+    arduino_port = "COM7"  # Replace with your Arduino's COM port
     baud_rate = 9600
     lstm_model = prepare_model()
     # Continuously send data
@@ -100,39 +100,68 @@ def arduino_predictions():
 
         print('Connection to Arduino established. Waiting for data...')
         lookback_copy = LOOKBACK
-        serialinput = [], #input filled with values that match our lookback value
+        serialinput = np.empty((0,4)) #input filled with values that match our lookback value
         first = True
+        init_first = True
         while True:
                 try:
+                    if isinstance(serialinput, torch.Tensor):
+                        serialinput = serialinput.cpu().numpy()
                     if ser.in_waiting > 0:
                         if first:
                             first = False
                             continue
                         elif lookback_copy > 1: #we fill input until we have enough values for the model
                             line = ser.readline().decode('utf-8').strip()
+                            # print(line)
                             parts = line.split()
                             r1, r2, r3 ,r4 = parts[1], parts[2], parts[3], parts[4]
+                            r1, r2, r3, r4 = float(r1), float(r2), float(r3), float(r4)
                             reading = np.array([r1, r2, r3, r4])
                             serialinput = np.append(serialinput, [np.array(reading)], axis=0)
                             lookback_copy -= 1
                             continue
                         elif serialinput.shape[0] != LOOKBACK:
+                            # print(serialinput)
                             line = ser.readline().decode('utf-8').strip()
+                            # print(line)
                             parts = line.split()
                             r1, r2, r3 ,r4 = parts[1], parts[2], parts[3], parts[4]
+                            r1, r2, r3, r4 = float(r1), float(r2), float(r3), float(r4)
                             reading = np.array([r1, r2, r3, r4])
                             serialinput = np.append(serialinput, [np.array(reading)], axis=0)
-                        serialinput = (serialinput - input_init)/input_init
-                        serialinput = torch.tensor(serialinput, dtype=torch.float32).unsqueeze(0).to(device)
+                            # if init_first:
+                            #     input_init = serialinput
+                            #     init_first = False
+                        # print(serialinput)
+                        input = (serialinput - input_init)/input_init
+                        input = torch.tensor(input, dtype=torch.float32).unsqueeze(0).to(device)
                         with torch.no_grad():
-                            pred = lstm_model(serialinput)
-                        ser.write(f"{pred}\n".encode())  # Send data as bytes
-                        # print(f"Sent: {pred.strip()}")
+                            pred = lstm_model(input)
+                        pred = pred.cpu().numpy()
+                        # pred = f"{pred[0]*90}".encode()
+                        ser.write(f"{pred[0]*90}".encode())  # Send data as bytes
+                        # print(f"Sent: {pred[0]*90}")
+                        response = ser.readline().decode('utf-8').strip()
+                        # if response:
+                        #     print("Received: ", response)
+                        # serialinput = serialinput.squeeze(0)
                         serialinput = serialinput[1:]
+                        # print(serialinput.shape)
                     time.sleep(0.1) #for minimal data congestion
 
                 except ValueError:
                     print("Value error: invalid data received.")
+                    line = ser.readline().decode('utf-8').strip()
+                    print(line)
+                    # parts = line.split()
+                    # r1, r2, r3 ,r4 = parts[1], parts[2], parts[3], parts[4]
+                    # r1, r2, r3, r4 = float(r1), float(r2), float(r3), float(r4)
+                    # reading = np.array([r1, r2, r3, r4])
+                    # print(reading.shape)
+                    # print(serialinput.shape)
+                    # serialinput = np.append(serialinput, reading, axis=0)
+                    # print(serialinput)
                 except UnicodeDecodeError:
                     print("Decoding error: skipping this reading.")
     except KeyboardInterrupt:
